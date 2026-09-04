@@ -1,11 +1,19 @@
+from django.conf import settings
 from django.db import models
+from books.models import Book
 
-# Create your models here.
-class sale(models.Model):
-    book = models.ForeignKey('books.book', on_delete=models.CASCADE)
+
+class Sale(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+
+    sold_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+
     quantity = models.PositiveIntegerField()
-    sale_date = models.DateTimeField(auto_now_add=True)
+    total_price=models.DecimalField(max_digits=10, decimal_places=2)
+    sale_at= models.DateTimeField(auto_now_add=True)
     
-
     def __str__(self):
-        return f"{self.quantity} copies of {self.book.title} sold on {self.sale_date}"
+        return self.book
