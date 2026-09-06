@@ -1,46 +1,24 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}
-Dashboard | Book Shop Management
-{% endblock title %}
+{% block title %}Dashboard{% endblock title %}
 
 {% block page_label %}
-Staff Portal
+Dashboard
 {% endblock page_label %}
 
 {% block page_title %}
-Book Shop Dashboard
+Book Shop Management
 {% endblock page_title %}
-
 
 {% block content %}
 
-<div class="space-y-8">
+<section class="space-y-8">
 
-    <!-- ========================= -->
-    <!-- Welcome Section -->
-    <!-- ========================= -->
-
-    <div>
-        <h2 class="text-2xl font-bold text-slate-900">
-            Welcome, {{ request.user.username }}
-        </h2>
-
-        <p class="mt-1 text-sm text-slate-500">
-            Manage your book shop, books, stock, suppliers and sales.
-        </p>
-    </div>
-
-
-    <!-- ========================= -->
     <!-- Statistics -->
-    <!-- ========================= -->
-
-    <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
 
         <!-- Total Books -->
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
 
             <div class="flex items-center justify-between">
 
@@ -50,18 +28,12 @@ Book Shop Dashboard
                     </p>
 
                     <h2 class="mt-2 text-3xl font-bold text-slate-900">
-                        {{ total_books|default:"0" }}
+                        {{ total_books }}
                     </h2>
-
-                    <p class="mt-1 text-xs text-slate-500">
-                        Books available
-                    </p>
                 </div>
 
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-
-                    <i class="fa-solid fa-book text-xl text-blue-600"></i>
-
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <i class="fa-solid fa-book text-xl"></i>
                 </div>
 
             </div>
@@ -70,7 +42,7 @@ Book Shop Dashboard
 
 
         <!-- Total Stock -->
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
 
             <div class="flex items-center justify-between">
 
@@ -80,79 +52,12 @@ Book Shop Dashboard
                     </p>
 
                     <h2 class="mt-2 text-3xl font-bold text-slate-900">
-                        {{ total_stock|default:"0" }}
+                        {{ total_stock }}
                     </h2>
-
-                    <p class="mt-1 text-xs text-slate-500">
-                        Items in stock
-                    </p>
                 </div>
 
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
-
-                    <i class="fa-solid fa-boxes-stacked text-xl text-green-600"></i>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- Categories -->
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-
-            <div class="flex items-center justify-between">
-
-                <div>
-                    <p class="text-sm font-medium text-slate-500">
-                        Categories
-                    </p>
-
-                    <h2 class="mt-2 text-3xl font-bold text-slate-900">
-                        {{ total_categories|default:"0" }}
-                    </h2>
-
-                    <p class="mt-1 text-xs text-slate-500">
-                        Book categories
-                    </p>
-                </div>
-
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100">
-
-                    <i class="fa-solid fa-layer-group text-xl text-purple-600"></i>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-                
-        <!-- Today's Sales -->
-        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-
-            <div class="flex items-center justify-between">
-
-                <div>
-                    <p class="text-sm font-medium text-slate-500">
-                        Today's Sales
-                    </p>
-
-                    <h2 class="mt-2 text-3xl font-bold text-slate-900">
-                        {{ today_sales|default:"0" }}
-                    </h2>
-
-                    <p class="mt-1 text-xs text-slate-500">
-                        Today's sales
-                    </p>
-                </div>
-
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100">
-
-                    <i class="fa-solid fa-cart-shopping text-xl text-emerald-600"></i>
-
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600">
+                    <i class="fa-solid fa-boxes-stacked text-xl"></i>
                 </div>
 
             </div>
@@ -161,206 +66,87 @@ Book Shop Dashboard
 
     </div>
 
+
+    <!-- Management -->
     <div>
 
-        <div class="mb-4">
-
+        <div class="mb-5">
             <h2 class="text-lg font-semibold text-slate-900">
-                Book Shop Management
+                Management
             </h2>
 
-            <p class="text-sm text-slate-500">
-                Quickly access the main sections of your book shop.
+            <p class="mt-1 text-sm text-slate-500">
+                Manage your book shop operations.
             </p>
-
         </div>
 
 
-        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
 
-            <!-- Books -->
-            <a
-                href="#"
-                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
 
-                <div class="flex items-center justify-between">
-
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
-
-                        <i class="fa-solid fa-book text-xl text-blue-600"></i>
-
-                    </div>
-
-                    <i class="fa-solid fa-arrow-right text-slate-300 transition group-hover:translate-x-1 group-hover:text-blue-600"></i>
-
-                </div>
-
-                <h3 class="mt-5 text-lg font-semibold text-slate-900">
-                    Books
-                </h3>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Manage books, authors, prices and book information.
-                </p>
-
-            </a>
 
 
             <!-- Stock -->
             <a
-                href="#"
-                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                href="{% url 'book_stock_list'%}"
+                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-green-200 hover:shadow-md"
             >
 
-                <div class="flex items-center justify-between">
-
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
-
-                        <i class="fa-solid fa-boxes-stacked text-xl text-green-600"></i>
-
-                    </div>
-
-                    <i class="fa-solid fa-arrow-right text-slate-300 transition group-hover:translate-x-1 group-hover:text-green-600"></i>
-
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600 transition group-hover:bg-green-600 group-hover:text-white">
+                    <i class="fa-solid fa-boxes-stacked text-xl"></i>
                 </div>
 
                 <h3 class="mt-5 text-lg font-semibold text-slate-900">
                     Stock
                 </h3>
 
-                <p class="mt-1 text-sm text-slate-500">
-                    Monitor available stock and low-stock books.
+                <p class="mt-2 text-sm text-slate-500">
+                    Monitor and manage book stock.
                 </p>
 
-            </a>
-
-
-            <!-- Categories -->
-            <a
-                href="#"
-                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-
-                <div class="flex items-center justify-between">
-
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100">
-
-                        <i class="fa-solid fa-layer-group text-xl text-purple-600"></i>
-
-                    </div>
-
-                    <i class="fa-solid fa-arrow-right text-slate-300 transition group-hover:translate-x-1 group-hover:text-purple-600"></i>
-
+                <div class="mt-5 text-sm font-medium text-green-600">
+                    Manage Stock
+                    <i class="fa-solid fa-arrow-right ml-1"></i>
                 </div>
 
-                <h3 class="mt-5 text-lg font-semibold text-slate-900">
-                    Categories
-                </h3>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    Organize books into different categories.
-                </p>
-
             </a>
-
-
 
 
             <!-- Sales -->
             <a
-                href="#"
-                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+                href="{% url 'sale_list' %}"
+                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-purple-200 hover:shadow-md"
             >
 
-                <div class="flex items-center justify-between">
-
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100">
-
-                        <i class="fa-solid fa-cart-shopping text-xl text-emerald-600"></i>
-
-                    </div>
-
-                    <i class="fa-solid fa-arrow-right text-slate-300 transition group-hover:translate-x-1 group-hover:text-emerald-600"></i>
-
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-600 transition group-hover:bg-purple-600 group-hover:text-white">
+                    <i class="fa-solid fa-cart-shopping text-xl"></i>
                 </div>
 
                 <h3 class="mt-5 text-lg font-semibold text-slate-900">
                     Sales
                 </h3>
 
-                <p class="mt-1 text-sm text-slate-500">
-                    Record sales and view sales history.
+                <p class="mt-2 text-sm text-slate-500">
+                    Manage book sales and transactions.
                 </p>
 
-            </a>
-
-
-            <!-- Reports -->
-            <a
-                href="#"
-                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-            >
-
-                <div class="flex items-center justify-between">
-
-                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100">
-
-                        <i class="fa-solid fa-chart-column text-xl text-red-600"></i>
-
-                    </div>
-
-                    <i class="fa-solid fa-arrow-right text-slate-300 transition group-hover:translate-x-1 group-hover:text-red-600"></i>
-
+                <div class="mt-5 text-sm font-medium text-purple-600">
+                    Manage Sales
+                    <i class="fa-solid fa-arrow-right ml-1"></i>
                 </div>
 
-                <h3 class="mt-5 text-lg font-semibold text-slate-900">
-                    Reports
-                </h3>
-
-                <p class="mt-1 text-sm text-slate-500">
-                    View sales, stock and book shop reports.
-                </p>
-
             </a>
 
-        </div>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- Quick Information -->
-    <!-- ========================= -->
-
-    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6">
-
-        <div class="flex items-start gap-4">
-
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white">
-
-                <i class="fa-solid fa-circle-info"></i>
-
-            </div>
-
-            <div>
-
-                <h3 class="font-semibold text-slate-900">
-                    Book Shop Overview
-                </h3>
-
-                <p class="mt-1 text-sm leading-6 text-slate-500">
-                    Use the dashboard to manage books, categories,
-                    stock, suppliers and sales from one place.
-                </p>
-
-            </div>
 
         </div>
 
     </div>
 
-</div>
+        </div>
+
+    </div>
+
+</section>
 
 {% endblock content %}
