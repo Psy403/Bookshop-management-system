@@ -59,9 +59,7 @@ def category_list(request):
     )
 
 
-# ==========================================
-# ADD CATEGORY
-# ==========================================
+
 
 @login_required
 def category_add(request):
@@ -132,10 +130,6 @@ def category_add(request):
         }
     )
 
-
-# ==========================================
-# EDIT CATEGORY
-# ==========================================
 
 @login_required
 def category_edit(request, category_id):
@@ -224,9 +218,6 @@ def category_edit(request, category_id):
     )
 
 
-# ==========================================
-# DELETE CATEGORY
-# ==========================================
 
 @login_required
 def category_delete(request, category_id):

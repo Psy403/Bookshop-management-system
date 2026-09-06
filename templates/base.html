@@ -101,30 +101,5 @@
 </div>
 
 
-{% comment %} 
-<!-- Django Messages -->
-{% if messages %}
-
-  {% for message in messages %}
-
-    <script>
-
-      Swal.fire({
-        toast: true,
-        position: 'top-end',
-        title: '{{ message.tag | title }}',
-        text: '{{ message }}',
-        icon: '{{ message.tag }}',
-        timer: 2500,
-        timerProgressBar: true
-      });
-
-    </script>
-
-  {% endfor %}
-
-{% endif %} {% endcomment %}
-
-
 </body>
 </html>

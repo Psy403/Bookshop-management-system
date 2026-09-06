@@ -6,9 +6,7 @@ from django.shortcuts import render, redirect
 from books.models import Book, stock
 
 
-# ==========================================
-# STAFF LOGIN
-# ==========================================
+
 
 def staff_login(request):
 
