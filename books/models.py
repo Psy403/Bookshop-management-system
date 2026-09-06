@@ -1,5 +1,6 @@
 from django.db import models
 from suppliers.models import supplier
+
 class book_category(models.Model):
     name = models.CharField()
     description=models.TextField(blank=True, null=True)

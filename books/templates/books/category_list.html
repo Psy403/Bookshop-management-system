@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Categories | Book Shop Management
+{% endblock title %}
+
+
+{% block page_label %}
+Books
+{% endblock page_label %}
+
+
+{% block page_title %}
+Book Categories
+{% endblock page_title %}
+
+
+{% block content %}
+
+<div class="space-y-6">
+
+
+    <!-- ================================= -->
+    <!-- Header -->
+    <!-- ================================= -->
+
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+
+            <h2 class="text-xl font-bold text-slate-900">
+                Book Categories
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                Manage the categories used to organize your books.
+            </p>
+
+        </div>
+
+
+        <!-- Add Category -->
+
+        <a
+            href="{% url 'category_add' %}"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+        >
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Category
+
+        </a>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- Statistics -->
+    <!-- ================================= -->
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+
+        <!-- Total Categories -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-slate-500">
+                        Total Categories
+                    </p>
+
+                    <h3 class="mt-2 text-3xl font-bold text-slate-900">
+                        {{ total_categories }}
+                    </h3>
+
+                </div>
+
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100">
+
+                    <i class="fa-solid fa-layer-group text-xl text-purple-600"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Search Result -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-slate-500">
+                        Showing
+                    </p>
+
+                    <h3 class="mt-2 text-3xl font-bold text-slate-900">
+                        {{ categories|length }}
+                    </h3>
+
+                    <p class="mt-1 text-xs text-slate-500">
+                        Categories in this list
+                    </p>
+
+                </div>
+
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100">
+
+                    <i class="fa-solid fa-list text-xl text-blue-600"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Category Management -->
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <p class="text-sm font-medium text-slate-500">
+                        Management
+                    </p>
+
+                    <h3 class="mt-2 text-lg font-bold text-slate-900">
+                        Categories
+                    </h3>
+
+                    <p class="mt-1 text-xs text-slate-500">
+                        Organize your books
+                    </p>
+
+                </div>
+
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
+
+                    <i class="fa-solid fa-book-open text-xl text-green-600"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- Search -->
+    <!-- ================================= -->
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+        <form
+            method="GET"
+            class="flex flex-col gap-3 sm:flex-row"
+        >
+
+            <div class="relative flex-1">
+
+                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+
+                    <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+
+                </div>
+
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ search }}"
+                    placeholder="Search category..."
+                    class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm text-slate-800 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-100"
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                Search
+
+            </button>
+
+
+            {% if search %}
+
+                <a
+                    href="{% url 'category_list' %}"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                    Clear
+
+                </a>
+
+            {% endif %}
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================= -->
+    <!-- Category Table -->
+    <!-- ================================= -->
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+
+        <!-- Table Header -->
+
+        <div class="border-b border-slate-200 px-5 py-4">
+
+            <h3 class="font-semibold text-slate-900">
+                Category List
+            </h3>
+
+            <p class="mt-1 text-xs text-slate-500">
+                All book categories
+            </p>
+
+        </div>
+
+
+        {% if categories %}
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full min-w-[700px] text-left">
+
+                    <thead class="bg-slate-50">
+
+                        <tr>
+
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                #
+                            </th>
+
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                Category Name
+                            </th>
+
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                Description
+                            </th>
+
+                            <th class="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody class="divide-y divide-slate-100">
+
+                        {% for category in categories %}
+
+                            <tr class="transition hover:bg-slate-50">
+
+
+                                <!-- Number -->
+
+                                <td class="px-5 py-4">
+
+                                    <span class="text-sm font-medium text-slate-500">
+                                        {{ forloop.counter }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- Category Name -->
+
+                                <td class="px-5 py-4">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
+
+                                            <i class="fa-solid fa-layer-group text-purple-600"></i>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <p class="font-semibold text-slate-900">
+                                                {{ category.name }}
+                                            </p>
+
+                                            <p class="text-xs text-slate-400">
+                                                Category #{{ category.id }}
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- Description -->
+
+                                <td class="px-5 py-4">
+
+                                    {% if category.description %}
+
+                                        <p class="max-w-md truncate text-sm text-slate-600">
+                                            {{ category.description }}
+                                        </p>
+
+                                    {% else %}
+
+                                        <span class="text-sm italic text-slate-400">
+                                            No description
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Actions -->
+
+                                <td class="px-5 py-4">
+
+                                    <div class="flex justify-end gap-2">
+
+
+                                        <!-- Edit -->
+
+                                        <a
+                                            href="{% url 'category_edit' category.id %}"
+                                            class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-blue-200 bg-blue-50 text-blue-600 transition hover:bg-blue-100"
+                                            title="Edit Category"
+                                        >
+
+                                            <i class="fa-solid fa-pen-to-square"></i>
+
+                                        </a>
+
+
+                                        <!-- Delete -->
+
+                                        <a
+                                            href="{% url 'category_delete' category.id %}"
+                                            class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 transition hover:bg-red-100"
+                                            title="Delete Category"
+                                        >
+
+                                            <i class="fa-solid fa-trash"></i>
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        {% else %}
+
+            <!-- Empty State -->
+
+            <div class="px-6 py-16 text-center">
+
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
+
+                    <i class="fa-solid fa-layer-group text-2xl text-slate-400"></i>
+
+                </div>
+
+
+                <h3 class="mt-5 text-lg font-semibold text-slate-900">
+                    No categories found
+                </h3>
+
+
+                {% if search %}
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        No category matches "{{ search }}".
+                    </p>
+
+                    <a
+                        href="{% url 'category_list' %}"
+                        class="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+                    >
+
+                        <i class="fa-solid fa-arrow-left"></i>
+
+                        Show All Categories
+
+                    </a>
+
+                {% else %}
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Start by adding your first book category.
+                    </p>
+
+                    <a
+                        href="{% url 'category_add' %}"
+                        class="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800"
+                    >
+
+                        <i class="fa-solid fa-plus"></i>
+
+                        Add Category
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+{% endblock content %}

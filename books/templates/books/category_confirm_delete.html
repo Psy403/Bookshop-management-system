@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Delete Category | Book Shop Management
+{% endblock title %}
+
+
+{% block page_label %}
+Books
+{% endblock page_label %}
+
+
+{% block page_title %}
+Delete Category
+{% endblock page_title %}
+
+
+{% block content %}
+
+<div class="mx-auto max-w-xl">
+
+
+    <!-- ================================= -->
+    <!-- Delete Card -->
+    <!-- ================================= -->
+
+    <div class="overflow-hidden rounded-2xl border border-red-200 bg-white shadow-sm">
+
+
+        <!-- Header -->
+
+        <div class="border-b border-red-100 bg-red-50 px-6 py-6">
+
+            <div class="flex items-center gap-4">
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-red-100">
+
+                    <i class="fa-solid fa-triangle-exclamation text-xl text-red-600"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h2 class="text-lg font-bold text-red-900">
+                        Delete Category
+                    </h2>
+
+                    <p class="mt-1 text-sm text-red-600">
+                        This action cannot be undone.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Content -->
+
+        <div class="p-6">
+
+
+            <p class="text-sm leading-6 text-slate-600">
+
+                Are you sure you want to delete the following category?
+
+            </p>
+
+
+            <!-- Category -->
+
+            <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+
+                <div class="flex items-center gap-4">
+
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100">
+
+                        <i class="fa-solid fa-layer-group text-purple-600"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <p class="font-semibold text-slate-900">
+                            {{ category.name }}
+                        </p>
+
+                        {% if category.description %}
+
+                            <p class="mt-1 text-sm text-slate-500">
+                                {{ category.description }}
+                            </p>
+
+                        {% else %}
+
+                            <p class="mt-1 text-sm italic text-slate-400">
+                                No description
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Warning -->
+
+            <div class="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
+
+                <div class="flex gap-3">
+
+                    <i class="fa-solid fa-circle-info mt-0.5 text-amber-600"></i>
+
+                    <p class="text-sm leading-6 text-amber-700">
+
+                        Deleting this category may also affect books that
+                        are assigned to this category because your
+                        <code class="rounded bg-amber-100 px-1">
+                            Book
+                        </code>
+                        model uses a foreign key to the category.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- Buttons -->
+            <!-- ================================= -->
+
+            <form
+                method="POST"
+                class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- Cancel -->
+
+                <a
+                    href="{% url 'category_list' %}"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                    Cancel
+
+                </a>
+
+
+                <!-- Delete -->
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
+                >
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Delete Category
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock content %}

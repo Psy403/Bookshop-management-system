@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Sales{% endblock %}
+
+{% block page_label %}
+Sales
+{% endblock %}
+
+{% block page_title %}
+Sales Management
+{% endblock %}
+
+{% block content %}
+
+<section class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+        <div>
+            <h2 class="text-xl font-semibold text-slate-900">
+                Sales Records
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                View all completed book sales.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'sale_create' %}"
+            class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+        >
+            <i class="fa-solid fa-plus"></i>
+            New Sale
+        </a>
+
+    </div>
+
+
+    <!-- Summary Cards -->
+    <div class="grid gap-4 sm:grid-cols-2">
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+                    <p class="text-sm font-medium text-slate-500">
+                        Total Sales
+                    </p>
+
+                    <p class="mt-2 text-3xl font-bold text-slate-900">
+                        {{ total_sales }}
+                    </p>
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <i class="fa-solid fa-cart-shopping text-xl"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+                    <p class="text-sm font-medium text-slate-500">
+                        Total Revenue
+                    </p>
+
+                    <p class="mt-2 text-3xl font-bold text-slate-900">
+                        Rs. {{ total_revenue|floatformat:2 }}
+                    </p>
+                </div>
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600">
+                    <i class="fa-solid fa-money-bill-wave text-xl"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Sales Table -->
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+        <div class="border-b border-slate-200 px-5 py-4">
+            <h2 class="text-lg font-semibold text-slate-900">
+                Sales History
+            </h2>
+
+            <p class="mt-1 text-sm text-slate-500">
+                List of all book sales.
+            </p>
+        </div>
+
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full min-w-[750px] text-left">
+
+                <thead class="bg-slate-50">
+
+                    <tr class="border-b border-slate-200">
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            S.N.
+                        </th>
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            Book
+                        </th>
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            Quantity
+                        </th>
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            Total Price
+                        </th>
+
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                            Sale Date
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody class="divide-y divide-slate-100">
+
+                    {% for sale in sales %}
+
+                    <tr class="transition hover:bg-slate-50">
+
+                        <td class="px-5 py-4 text-sm font-medium text-slate-700">
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td class="px-5 py-4">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                                    <i class="fa-solid fa-book"></i>
+                                </div>
+
+                                <div>
+                                    <p class="font-semibold text-slate-900">
+                                        {{ sale.book.title }}
+                                    </p>
+
+                                    <p class="text-xs text-slate-500">
+                                        {{ sale.book.author }}
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td class="px-5 py-4 text-sm font-semibold text-slate-700">
+                            {{ sale.quantity }}
+                        </td>
+
+                        <td class="px-5 py-4 text-sm font-semibold text-slate-700">
+                            Rs. {{ sale.total_price|floatformat:2 }}
+                        </td>
+
+                        <td class="px-5 py-4 text-sm text-slate-600">
+                            {{ sale.sale_at|date:"M d, Y h:i A" }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="px-5 py-12 text-center">
+
+                            <div class="flex flex-col items-center">
+
+                                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                                    <i class="fa-solid fa-cart-shopping text-2xl"></i>
+                                </div>
+
+                                <p class="mt-4 font-semibold text-slate-700">
+                                    No sales found
+                                </p>
+
+                                <p class="mt-1 text-sm text-slate-500">
+                                    No book sales have been recorded yet.
+                                </p>
+
+                            </div>
+
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

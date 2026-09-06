@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}New Sale{% endblock %}
+
+{% block page_label %}
+Sales
+{% endblock %}
+
+{% block page_title %}
+New Sale
+{% endblock %}
+
+{% block content %}
+
+<section class="mx-auto max-w-3xl">
+
+    <div class="mb-6">
+        <h2 class="text-xl font-semibold text-slate-900">
+            Create New Sale
+        </h2>
+
+        <p class="mt-1 text-sm text-slate-500">
+            Select a book and enter the quantity sold.
+        </p>
+    </div>
+
+
+    <form
+        method="POST"
+        class="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- Book -->
+        <div>
+
+            <label
+                for="book"
+                class="mb-2 block text-sm font-semibold text-slate-700"
+            >
+                Select Book
+            </label>
+
+            <select
+                id="book"
+                name="book"
+                required
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            >
+
+                <option value="">
+                    Select a book
+                </option>
+
+                {% for book in books %}
+
+                <option value="{{ book.id }}">
+
+                    {{ book.title }}
+
+                    {% if book.stock %}
+                        — Available: {{ book.stock.quantity }}
+                    {% else %}
+                        — Available: 0
+                    {% endif %}
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- Quantity -->
+        <div>
+
+            <label
+                for="quantity"
+                class="mb-2 block text-sm font-semibold text-slate-700"
+            >
+                Quantity
+            </label>
+
+            <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                required
+                placeholder="Enter quantity"
+                class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+            >
+
+            <p class="mt-2 text-xs text-slate-500">
+                The quantity cannot be greater than the available stock.
+            </p>
+
+        </div>
+
+
+        <!-- Buttons -->
+        <div class="flex flex-col-reverse gap-3 border-t border-slate-200 pt-5 sm:flex-row sm:justify-end">
+
+            <a
+                href="{% url 'sale_list' %}"
+                class="inline-flex items-center justify-center rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+            >
+                <i class="fa-solid fa-check"></i>
+                Complete Sale
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
