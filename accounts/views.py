@@ -3,6 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from books.models import Book, stock
+
+
+# ==========================================
+# STAFF LOGIN
+# ==========================================
 
 def staff_login(request):
 
@@ -27,6 +33,7 @@ def staff_login(request):
                     request,
                     "Your account has been deactivated."
                 )
+
                 return render(
                     request,
                     "accounts/staff_login.html"
@@ -34,11 +41,10 @@ def staff_login(request):
 
             login(request, user)
 
-            # Remember me
             if request.POST.get("remember_me"):
-                request.session.set_expiry(1209600)  # 14 days
+                request.session.set_expiry(1209600)
             else:
-                request.session.set_expiry(0)  # Browser close
+                request.session.set_expiry(0)
 
             return redirect("dashboard")
 
@@ -66,8 +72,23 @@ def staff_logout(request):
     return redirect("staff_login")
 
 
-
-
 @login_required
 def dashboard(request):
-    return render(request, "accounts/dashboard.html")
+
+    total_books = Book.objects.count()
+
+    total_stock = sum(
+        stock.quantity
+        for stock in stock.objects.all()
+    )
+
+    context = {
+        "total_books": total_books,
+        "total_stock": total_stock,
+    }
+
+    return render(
+        request,
+        "accounts/dashboard.html",
+        context
+    )
