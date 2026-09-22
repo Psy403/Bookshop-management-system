@@ -14,6 +14,8 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     >
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="min-h-screen bg-slate-100">
@@ -42,16 +44,6 @@
                         Login to your staff account
                     </p>
                 </div>
-
-                <!-- Messages -->
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                            <i class="fa-solid fa-circle-exclamation mr-2"></i>
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
 
                 <!-- Login Form -->
                 <form method="POST">
@@ -215,6 +207,24 @@
             }
         }
     </script>
+
+    {% if messages %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            {% for message in messages %}
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}",
+                title: "{{ message|escapejs }}",
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true
+            });
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
 
 </body>
 </html>

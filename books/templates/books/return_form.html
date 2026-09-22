@@ -43,6 +43,7 @@
                     <label for="return_date" class="mb-2 block text-sm font-semibold text-slate-700">Return Date</label>
                     <input type="date" id="return_date" name="return_date" value="{{ return_date|default:'' }}" required
                            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
+                    <p class="mt-2 text-xs text-slate-500">The return date must match the selected sale date.</p>
                 </div>
                 <div>
                     <label for="return_amount" class="mb-2 block text-sm font-semibold text-slate-700">Return Amount</label>
@@ -90,9 +91,20 @@
         "{{ sale.id }}": {{ sale.remaining_quantity }},
         {% endfor %}
     };
+    const saleDates = {
+        {% for sale in eligible_sales %}
+        "{{ sale.id }}": "{{ sale.sale_date|date:'Y-m-d' }}",
+        {% endfor %}
+    };
     function updateReturnAmount() {
         const price = salePrices[saleSelect.value];
         const remaining = saleRemaining[saleSelect.value] || 0;
+        const saleDate = saleDates[saleSelect.value] || "";
+        document.getElementById("return_date").min = saleDate;
+        document.getElementById("return_date").max = saleDate;
+        if (saleDate) {
+            document.getElementById("return_date").value = saleDate;
+        }
         quantityInput.max = remaining || "";
         if (Number(quantityInput.value) > remaining) {
             quantityInput.value = remaining;

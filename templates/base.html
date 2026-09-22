@@ -100,6 +100,24 @@
 
 </div>
 
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        {% for message in messages %}
+        Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}",
+            title: "{{ message|escapejs }}",
+            showConfirmButton: false,
+            timer: 3500,
+            timerProgressBar: true
+        });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
 
 </body>
 </html>

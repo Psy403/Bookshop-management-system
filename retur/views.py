@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import redirect, render
+from django.utils import timezone
 
 from books.models import stock
 from sales.models import Sale
@@ -45,6 +46,7 @@ def return_create(request):
         sale.remaining_quantity = sale.quantity - sale.returned_quantity
         if sale.remaining_quantity > 0:
             sale.unit_price = sale.total_price / sale.quantity
+            sale.sale_date = timezone.localtime(sale.sale_at).date()
             eligible_sales.append(sale)
 
     if request.method == "POST":
@@ -85,6 +87,15 @@ def return_create(request):
                 sale = Sale.objects.select_for_update().select_related("book").get(
                     id=sale.id
                 )
+                sale_date = timezone.localtime(sale.sale_at).date()
+
+                if parsed_date != sale_date:
+                    messages.error(
+                        request,
+                        f"The return date must be {sale_date.strftime('%B %d, %Y')}, "
+                        "the same date as the sale.",
+                    )
+                    return render(request, "books/return_form.html", context)
 
                 returned_quantity = sum(
                     item.return_quantity

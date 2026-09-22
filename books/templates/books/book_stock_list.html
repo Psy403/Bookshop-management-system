@@ -130,11 +130,6 @@ Book Stock
                         <td class="px-5 py-4 text-sm font-medium text-slate-700">
                             {{ forloop.counter }}
                         </td>
-                        <td class="px-5 py-4 text-sm text-slate-600">
-                            {{ book.returned_quantity }}
-                        </td>
-
-
                         <!-- Book -->
                         <td class="px-5 py-4">
 
@@ -210,6 +205,11 @@ Book Stock
 
                             {% endif %}
 
+                        </td>
+
+                        <!-- Returned -->
+                        <td class="px-5 py-4 text-sm text-slate-600">
+                            {{ book.returned_quantity }}
                         </td>
 
 
