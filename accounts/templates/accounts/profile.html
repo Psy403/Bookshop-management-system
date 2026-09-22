@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+{% block page_label %}Account{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+
+{% block content %}
+<section class="mx-auto max-w-4xl space-y-6">
+    <div>
+        <h2 class="text-xl font-semibold text-slate-900">Profile Settings</h2>
+        <p class="mt-1 text-sm text-slate-500">Changes are applied only after administrator approval.</p>
+    </div>
+
+    {% if pending_request %}
+    <div class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        Your latest profile changes are waiting for administrator approval.
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="text-sm text-red-600">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-slate-700">First name</label>
+                {{ form.first_name }}
+                {{ form.first_name.errors }}
+            </div>
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-slate-700">Last name</label>
+                {{ form.last_name }}
+                {{ form.last_name.errors }}
+            </div>
+            <div class="sm:col-span-2">
+                <label class="mb-2 block text-sm font-semibold text-slate-700">Email</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+        </div>
+
+        <div>
+            <label class="mb-3 block text-sm font-semibold text-slate-700">Choose an avatar</label>
+            <div class="grid grid-cols-5 gap-3 sm:grid-cols-10">
+                {% for option in avatar_options %}
+                <label class="cursor-pointer">
+                    <input type="radio" name="avatar_choice" value="{{ option.id }}" class="peer sr-only" {% if form.avatar_choice.value|stringformat:"s" == option.id|stringformat:"s" %}checked{% endif %}>
+                    <img src="{% static option.path %}" alt="{{ option.name }} avatar" class="rounded-full border-4 border-transparent p-0.5 transition peer-checked:border-blue-500 peer-checked:bg-blue-50">
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <label class="mb-2 block text-sm font-semibold text-slate-700">Custom profile picture</label>
+            {{ form.profile_picture }}
+            <p class="mt-2 text-xs text-slate-500">JPEG, PNG, or WebP only. Maximum size: 2 MB.</p>
+            {{ form.profile_picture.errors }}
+        </div>
+
+        <button type="submit" {% if pending_request %}disabled{% endif %} class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50">
+            Submit for approval
+        </button>
+    </form>
+</section>
+{% endblock %}

@@ -54,28 +54,43 @@
           </h1>
 
         </div>
-        <div class="flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-4 py-2">
-
-          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
-            MR
+        <div class="relative flex items-center gap-2">
+          <div class="relative">
+            <button id="notification-button" type="button" class="relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50" aria-label="Notifications">
+              <i class="fa-solid fa-bell"></i>
+              {% if unread_notification_count %}<span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">{{ unread_notification_count|default:"" }}</span>{% endif %}
+            </button>
+            <div id="notification-menu" class="absolute right-0 z-50 mt-2 hidden w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+              <div class="border-b border-slate-100 px-4 py-3"><p class="font-semibold text-slate-900">Recent notifications</p></div>
+              <div class="max-h-96 overflow-y-auto">
+                {% for notification in recent_notifications %}
+                <div class="border-b border-slate-100 px-4 py-3">
+                  <p class="text-sm font-medium text-slate-800">{{ notification.details }}</p>
+                  <p class="mt-1 text-xs text-slate-500">{{ notification.created_at|timesince }} ago</p>
+                </div>
+                {% empty %}
+                <p class="px-4 py-8 text-center text-sm text-slate-500">No recent notifications.</p>
+                {% endfor %}
+              </div>
+              <a href="{% url 'activity_list' %}" class="block border-t border-slate-100 px-4 py-3 text-center text-sm font-semibold text-blue-600 hover:bg-slate-50">See more activity</a>
+            </div>
           </div>
 
-          <div>
-
-            <p class="text-sm font-semibold text-slate-800">
-              {{ request.user.username }}
-            </p>
-
-            <p class="text-xs text-slate-500">
-              {{ request.user.role }}
-            </p>
-
+          <div class="relative">
+            <button id="profile-button" type="button" class="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 hover:bg-slate-100">
+              {% if request.user.profile_picture %}
+                <img src="{{ request.user.profile_picture.url }}" alt="Profile" class="h-9 w-9 rounded-full object-cover">
+              {% else %}
+                <img src="{% static 'accounts/avatars/avatar-' %}{{ request.user.avatar_choice }}.svg" alt="Profile" class="h-9 w-9 rounded-full">
+              {% endif %}
+              <span class="hidden text-left sm:block"><span class="block text-sm font-semibold text-slate-800">{{ request.user.username }}</span><span class="block text-xs text-slate-500">{{ request.user.role }}</span></span>
+              <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+            </button>
+            <div id="profile-menu" class="absolute right-0 z-50 mt-2 hidden w-48 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+              <a href="{% url 'profile' %}" class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"><i class="fa-solid fa-user w-4 text-slate-400"></i>Profile</a>
+              <a href="{% url 'staff_logout' %}" class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-red-600 hover:bg-red-50"><i class="fa-solid fa-right-from-bracket w-4"></i>Logout</a>
+            </div>
           </div>
-
-
-          
-
-
         </div>
 
       </div>
@@ -99,6 +114,19 @@
   </div>
 
 </div>
+
+<script>
+  const profileButton = document.getElementById("profile-button");
+  const profileMenu = document.getElementById("profile-menu");
+  const notificationButton = document.getElementById("notification-button");
+  const notificationMenu = document.getElementById("notification-menu");
+  profileButton?.addEventListener("click", () => profileMenu.classList.toggle("hidden"));
+  notificationButton?.addEventListener("click", () => notificationMenu.classList.toggle("hidden"));
+  document.addEventListener("click", (event) => {
+    if (!profileButton?.contains(event.target) && !profileMenu?.contains(event.target)) profileMenu?.classList.add("hidden");
+    if (!notificationButton?.contains(event.target) && !notificationMenu?.contains(event.target)) notificationMenu?.classList.add("hidden");
+  });
+</script>
 
 {% if messages %}
 <script>

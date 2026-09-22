@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Activity Logs{% endblock %}
+
+{% block page_label %}Activity Logs{% endblock %}
+
+{% block page_title %}Staff Activity{% endblock %}
+
+{% block content %}
+<section class="space-y-6">
+    <div>
+        <h2 class="text-xl font-semibold text-slate-900">Activity Logs</h2>
+        <p class="mt-1 text-sm text-slate-500">Recent staff activity in the system.</p>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[800px] text-left">
+                <thead class="bg-slate-50">
+                    <tr class="border-b border-slate-200">
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Date</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">User</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Action</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Path</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">IP Address</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Description</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for activity in activities %}
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-5 py-4 text-sm text-slate-600">{{ activity.created_at|date:"M d, Y h:i A" }}</td>
+                        <td class="px-5 py-4 text-sm font-semibold text-slate-700">{{ activity.user|default:"Anonymous" }}</td>
+                        <td class="px-5 py-4 text-sm font-semibold text-slate-700">{{ activity.action }}</td>
+                        <td class="px-5 py-4 text-sm text-slate-600">{{ activity.path }}</td>
+                        <td class="px-5 py-4 text-sm text-slate-600">{{ activity.status_code }}</td>
+                        <td class="px-5 py-4 text-sm text-slate-600">{{ activity.ip_address|default:"-" }}</td>
+                        <td class="px-5 py-4 text-sm text-slate-600">{{ activity.details }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="px-5 py-12 text-center text-sm text-slate-500">No activity has been logged yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

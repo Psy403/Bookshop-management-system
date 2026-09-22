@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import book_category
 from .models import Book, stock
 from retur.models import Return
+from log.utils import record_activity
 
 
 @login_required
@@ -24,11 +25,17 @@ def book_stock_list(request):
         if hasattr(item, "stock")
     )
     returned_by_book = {}
-    for item in Return.objects.select_related("sale__book"):
-        if item.sale:
-            returned_by_book[item.sale.book_id] = (
-                returned_by_book.get(item.sale.book_id, 0)
-                + (item.return_quantity or 0)
+    for item in Return.objects.select_related("sale__book", "sale_item__book"):
+        book_id = (
+            item.sale_item.book_id
+            if item.sale_item
+            else item.sale.book_id
+            if item.sale
+            else None
+        )
+        if book_id:
+            returned_by_book[book_id] = (
+                returned_by_book.get(book_id, 0) + (item.return_quantity or 0)
             )
     for book in books:
         book.returned_quantity = returned_by_book.get(book.id, 0)
@@ -124,6 +131,11 @@ def category_add(request):
             description=description
         )
 
+        record_activity(
+            request,
+            f'Category "{name}" was created.',
+            action="CREATE",
+        )
         messages.success(
             request,
             "Category added successfully."
@@ -208,6 +220,11 @@ def category_edit(request, category_id):
 
         category.save()
 
+        record_activity(
+            request,
+            f'Category "{name}" was updated.',
+            action="UPDATE",
+        )
         messages.success(
             request,
             "Category updated successfully."
@@ -243,6 +260,11 @@ def category_delete(request, category_id):
 
         category.delete()
 
+        record_activity(
+            request,
+            f'Category "{category_name}" was deleted.',
+            action="DELETE",
+        )
         messages.success(
             request,
             f'Category "{category_name}" deleted successfully.'

@@ -13,4 +13,9 @@ urlpatterns = [
         views.sale_create,
         name="sale_create"
     ),
+    path(
+        "<int:sale_id>/report/",
+        views.sale_report,
+        name="sale_report"
+    ),
 ]

@@ -51,7 +51,9 @@
                     <tr class="transition hover:bg-slate-50">
                         <td class="px-5 py-4 text-sm font-medium text-slate-700">{{ forloop.counter }}</td>
                         <td class="px-5 py-4 text-sm text-slate-600">
-                            {% if return.sale %}
+                            {% if return.sale_item %}
+                                {{ return.sale_item.book.title }}
+                            {% elif return.sale %}
                                 {{ return.sale.book.title }}
                             {% else %}
                                 Legacy return

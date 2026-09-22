@@ -2,9 +2,14 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import transaction
 
 from books.models import Book, stock
 from retur.models import Return
+from log.utils import record_activity
+from .forms import ProfileChangeRequestForm
+from .models import ProfileChangeRequest
 
 
 
@@ -39,6 +44,11 @@ def staff_login(request):
                 )
 
             login(request, user)
+            record_activity(
+                request,
+                f'User "{user.username}" logged in.',
+                action="LOGIN",
+            )
 
             if request.POST.get("remember_me"):
                 request.session.set_expiry(1209600)
@@ -61,7 +71,13 @@ def staff_login(request):
 @login_required
 def staff_logout(request):
 
+    username = request.user.username
     logout(request)
+    record_activity(
+        request,
+        f'User "{username}" logged out.',
+        action="LOGOUT",
+    )
 
     messages.success(
         request,
@@ -92,4 +108,43 @@ def dashboard(request):
         request,
         "accounts/dashboard.html",
         context
+    )
+
+
+@login_required
+def profile(request):
+    pending_request = ProfileChangeRequest.objects.filter(
+        user=request.user, status="PENDING"
+    ).first()
+
+    if request.method == "POST":
+        if pending_request:
+            messages.warning(request, "You already have a profile change waiting for admin approval.")
+            return redirect("profile")
+        form = ProfileChangeRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            change = form.save(commit=False)
+            change.user = request.user
+            change.save()
+            record_activity(
+                request,
+                "Profile information was submitted for admin approval.",
+                action="PROFILE",
+            )
+            messages.success(request, "Profile changes submitted for admin approval.")
+            return redirect("profile")
+    else:
+        form = ProfileChangeRequestForm(
+            initial={
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+                "email": request.user.email,
+                "avatar_choice": request.user.avatar_choice,
+            }
+        )
+
+    return render(
+        request,
+        "accounts/profile.html",
+        {"form": form, "pending_request": pending_request},
     )

@@ -21,12 +21,12 @@
             <div class="grid gap-6 p-6 sm:grid-cols-2">
                 <div class="sm:col-span-2">
                     <label for="sale" class="mb-2 block text-sm font-semibold text-slate-700">Sale to Return</label>
-                    <select id="sale" name="sale" required
+                    <select id="sale_item" name="sale_item" required
                             class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
                         <option value="">Select a sale</option>
                         {% for sale in eligible_sales %}
-                        <option value="{{ sale.id }}" {% if sale.id|stringformat:"s" == sale_id %}selected{% endif %}>
-                            {{ sale.book.title }} — {{ sale.remaining_quantity }} of {{ sale.quantity }} remaining — Rs. {{ sale.total_price|floatformat:2 }} — {{ sale.sale_at|date:"M d, Y h:i A" }}
+                        <option value="{{ sale.id }}" data-sale-date="{{ sale.sale_date|date:'Y-m-d' }}" data-unit-price="{{ sale.unit_price }}" data-remaining="{{ sale.remaining_quantity }}">
+                            {% if sale.book %}{{ sale.book.title }}{% else %}{{ sale.sale.book.title }}{% endif %} — {{ sale.remaining_quantity }} remaining — Rs. {{ sale.unit_price|floatformat:2 }} per item — {{ sale.sale_date|date:"M d, Y h:i A" }}
                         </option>
                         {% empty %}
                         <option value="" disabled>No eligible sales available</option>
@@ -78,28 +78,14 @@
     </div>
 </div>
 <script>
-    const saleSelect = document.getElementById("sale");
+    const saleSelect = document.getElementById("sale_item");
     const quantityInput = document.getElementById("return_quantity");
     const amountInput = document.getElementById("return_amount");
-    const salePrices = {
-        {% for sale in eligible_sales %}
-        "{{ sale.id }}": {{ sale.unit_price }},
-        {% endfor %}
-    };
-    const saleRemaining = {
-        {% for sale in eligible_sales %}
-        "{{ sale.id }}": {{ sale.remaining_quantity }},
-        {% endfor %}
-    };
-    const saleDates = {
-        {% for sale in eligible_sales %}
-        "{{ sale.id }}": "{{ sale.sale_date|date:'Y-m-d' }}",
-        {% endfor %}
-    };
     function updateReturnAmount() {
-        const price = salePrices[saleSelect.value];
-        const remaining = saleRemaining[saleSelect.value] || 0;
-        const saleDate = saleDates[saleSelect.value] || "";
+        const option = saleSelect.options[saleSelect.selectedIndex];
+        const price = Number(option?.dataset.unitPrice || 0);
+        const remaining = Number(option?.dataset.remaining || 0);
+        const saleDate = option?.dataset.saleDate || "";
         document.getElementById("return_date").min = saleDate;
         document.getElementById("return_date").max = saleDate;
         if (saleDate) {

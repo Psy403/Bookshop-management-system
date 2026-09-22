@@ -1,10 +1,17 @@
 from django.db import models
-from sales.models import Sale
+from sales.models import Sale, SaleItem
 
 # Create your models here.
 class Return(models.Model):
     sale = models.ForeignKey(
         Sale,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="returns",
+    )
+    sale_item = models.ForeignKey(
+        SaleItem,
         on_delete=models.PROTECT,
         null=True,
         blank=True,
