@@ -34,4 +34,5 @@ urlpatterns = [
         views.book_stock_list,
         name="book_stock_list"
     ),
+
 ]

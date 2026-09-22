@@ -15,7 +15,7 @@ Book Shop Management
 <section class="space-y-8">
 
     <!-- Statistics -->
-    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
 
         <!-- Total Books -->
         <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
@@ -30,6 +30,30 @@ Book Shop Management
                     <h2 class="mt-2 text-3xl font-bold text-slate-900">
                         {{ total_books }}
                     </h2>
+                </div>
+
+
+                <!-- Total Returns -->
+                <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">
+                                Total Returns
+                            </p>
+
+                            <h2 class="mt-2 text-3xl font-bold text-slate-900">
+                                {{ total_returns }}
+                            </h2>
+                        </div>
+
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                            <i class="fa-solid fa-rotate-left text-xl"></i>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -107,6 +131,31 @@ Book Shop Management
 
                 <div class="mt-5 text-sm font-medium text-green-600">
                     Manage Stock
+                    <i class="fa-solid fa-arrow-right ml-1"></i>
+                </div>
+
+            </a>
+
+            <!-- Returns -->
+            <a
+                href="{% url 'return_list' %}"
+                class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-200 hover:shadow-md"
+            >
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 transition group-hover:bg-orange-600 group-hover:text-white">
+                    <i class="fa-solid fa-rotate-left text-xl"></i>
+                </div>
+
+                <h3 class="mt-5 text-lg font-semibold text-slate-900">
+                    Returns
+                </h3>
+
+                <p class="mt-2 text-sm text-slate-500">
+                    Record and review returned books.
+                </p>
+
+                <div class="mt-5 text-sm font-medium text-orange-600">
+                    Manage Returns
                     <i class="fa-solid fa-arrow-right ml-1"></i>
                 </div>
 

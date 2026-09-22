@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import book_category
 from .models import Book, stock
+from retur.models import Return
 
 
 @login_required
@@ -22,6 +23,15 @@ def book_stock_list(request):
         for item in books
         if hasattr(item, "stock")
     )
+    returned_by_book = {}
+    for item in Return.objects.select_related("sale__book"):
+        if item.sale:
+            returned_by_book[item.sale.book_id] = (
+                returned_by_book.get(item.sale.book_id, 0)
+                + (item.return_quantity or 0)
+            )
+    for book in books:
+        book.returned_quantity = returned_by_book.get(book.id, 0)
 
     context = {
         "books": books,

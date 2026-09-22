@@ -14,8 +14,17 @@ def sale_list(request):
     sales = Sale.objects.select_related(
         "book"
     ).order_by("-sale_at")
+    sales = list(sales)
+    for sale in sales:
+        sale.returned_quantity = sum(
+            item.return_quantity
+            if item.return_quantity is not None
+            else sale.quantity
+            for item in sale.returns.all()
+        )
+        sale.remaining_quantity = max(sale.quantity - sale.returned_quantity, 0)
 
-    total_sales = sales.count()
+    total_sales = len(sales)
 
     total_revenue = sum(
         sale.total_price

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Returns{% endblock %}
+
+{% block page_label %}Returns{% endblock %}
+
+{% block page_title %}Returns Management{% endblock %}
+
+{% block content %}
+<section class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <h2 class="text-xl font-semibold text-slate-900">Return Records</h2>
+            <p class="mt-1 text-sm text-slate-500">View and record returned books.</p>
+        </div>
+        <a href="{% url 'return_create' %}"
+           class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700">
+            <i class="fa-solid fa-plus"></i>
+            New Return
+        </a>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p class="text-sm font-medium text-slate-500">Total Returns</p>
+            <p class="mt-2 text-3xl font-bold text-slate-900">{{ total_returns }}</p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+            <p class="text-sm font-medium text-slate-500">Total Return Amount</p>
+            <p class="mt-2 text-3xl font-bold text-slate-900">Rs. {{ total_return_amount|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="overflow-x-auto">
+            <table class="w-full min-w-[800px] text-left">
+                <thead class="bg-slate-50">
+                    <tr class="border-b border-slate-200">
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">S.N.</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Sale</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Items</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Return Date</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Amount</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Type</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Reason</th>
+                        <th class="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for return in returns %}
+                    <tr class="transition hover:bg-slate-50">
+                        <td class="px-5 py-4 text-sm font-medium text-slate-700">{{ forloop.counter }}</td>
+                        <td class="px-5 py-4 text-sm text-slate-600">
+                            {% if return.sale %}
+                                {{ return.sale.book.title }}
+                            {% else %}
+                                Legacy return
+                            {% endif %}
+                        </td>
+                        <td class="px-5 py-4 text-sm font-semibold text-slate-700">{{ return.display_quantity }}</td>
+                        <td class="px-5 py-4 text-sm text-slate-600">{{ return.return_date|date:"M d, Y" }}</td>
+                        <td class="px-5 py-4 text-sm font-semibold text-slate-700">Rs. {{ return.return_amount|floatformat:2 }}</td>
+                        <td class="px-5 py-4 text-sm text-slate-600">{{ return.return_type }}</td>
+                        <td class="max-w-xs px-5 py-4 text-sm text-slate-600">{{ return.reason }}</td>
+                        <td class="px-5 py-4 text-sm font-semibold text-slate-700">{{ return.return_status }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="px-5 py-12 text-center text-sm text-slate-500">No returns have been recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

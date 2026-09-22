@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from books.models import Book, stock
+from retur.models import Return
 
 
 
@@ -79,10 +80,12 @@ def dashboard(request):
         stock.quantity
         for stock in stock.objects.all()
     )
+    total_returns = Return.objects.count()
 
     context = {
         "total_books": total_books,
         "total_stock": total_stock,
+        "total_returns": total_returns,
     }
 
     return render(

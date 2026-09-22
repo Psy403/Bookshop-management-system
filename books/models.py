@@ -13,9 +13,15 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_date = models.DateField()
+    publication_year = models.PositiveIntegerField(null=True, blank=True)
+    isbn = models.CharField(max_length=13, null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    stock_quantity = models.PositiveIntegerField(default=0)
+    cost_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     supplier = models.ForeignKey(supplier, on_delete=models.CASCADE)
     is_available=models.BooleanField(default=True)
+    language = models.CharField(max_length=50, blank=True)
+    edition = models.CharField(max_length=100, blank=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
     
@@ -29,8 +35,3 @@ class stock(models.Model):
 
     def __str__(self):
         return f"{self.book.title} - {self.quantity} in stock"
-    
-
-
-
-
