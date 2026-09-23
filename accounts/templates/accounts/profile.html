@@ -9,7 +9,7 @@
 <section class="mx-auto max-w-4xl space-y-6">
     <div>
         <h2 class="text-xl font-semibold text-slate-900">Profile Settings</h2>
-        <p class="mt-1 text-sm text-slate-500">Changes are applied only after administrator approval.</p>
+        <p class="mt-1 text-sm text-slate-500">Profile pictures update immediately. Personal details and contact numbers require administrator approval.</p>
     </div>
 
     {% if pending_request %}
@@ -32,10 +32,21 @@
                 {{ form.last_name }}
                 {{ form.last_name.errors }}
             </div>
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-slate-700">Middle name</label>
+                {{ form.middle_name }}
+                {{ form.middle_name.errors }}
+            </div>
             <div class="sm:col-span-2">
                 <label class="mb-2 block text-sm font-semibold text-slate-700">Email</label>
                 {{ form.email }}
                 {{ form.email.errors }}
+            </div>
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-slate-700">Contact numbers</label>
+                {{ form.contact_numbers }}
+                <p class="mt-2 text-xs text-slate-500">Enter one number per line.</p>
+                {{ form.contact_numbers.errors }}
             </div>
         </div>
 
@@ -59,7 +70,7 @@
         </div>
 
         <button type="submit" {% if pending_request %}disabled{% endif %} class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50">
-            Submit for approval
+            Save profile
         </button>
     </form>
 </section>

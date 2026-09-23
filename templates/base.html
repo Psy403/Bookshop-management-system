@@ -61,12 +61,24 @@
               {% if unread_notification_count %}<span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">{{ unread_notification_count|default:"" }}</span>{% endif %}
             </button>
             <div id="notification-menu" class="absolute right-0 z-50 mt-2 hidden w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-              <div class="border-b border-slate-100 px-4 py-3"><p class="font-semibold text-slate-900">Recent notifications</p></div>
+              <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                <p class="font-semibold text-slate-900">Recent notifications</p>
+                {% if unread_notification_count %}
+                <form method="post" action="{% url 'mark_all_activities_read' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.path }}">
+                  <button class="text-xs font-semibold text-blue-600 hover:text-blue-800">Mark all as read</button>
+                </form>
+                {% endif %}
+              </div>
               <div class="max-h-96 overflow-y-auto">
                 {% for notification in recent_notifications %}
                 <div class="border-b border-slate-100 px-4 py-3">
+                  <a href="{% url 'activity_list' %}?search={{ notification.user.username|urlencode }}" class="block">
                   <p class="text-sm font-medium text-slate-800">{{ notification.details }}</p>
                   <p class="mt-1 text-xs text-slate-500">{{ notification.created_at|timesince }} ago</p>
+                  </a>
+                  <form method="post" action="{% url 'mark_activity_read' notification.id %}" class="mt-2">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="text-xs font-semibold text-blue-600">Mark as read</button></form>
                 </div>
                 {% empty %}
                 <p class="px-4 py-8 text-center text-sm text-slate-500">No recent notifications.</p>

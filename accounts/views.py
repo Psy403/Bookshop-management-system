@@ -118,11 +118,15 @@ def profile(request):
     ).first()
 
     if request.method == "POST":
-        if pending_request:
-            messages.warning(request, "You already have a profile change waiting for admin approval.")
-            return redirect("profile")
         form = ProfileChangeRequestForm(request.POST, request.FILES)
         if form.is_valid():
+            request.user.avatar_choice = int(form.cleaned_data["avatar_choice"])
+            if form.cleaned_data.get("profile_picture"):
+                request.user.profile_picture = form.cleaned_data["profile_picture"]
+            request.user.save(update_fields=["avatar_choice", "profile_picture"])
+            if pending_request:
+                messages.success(request, "Profile picture updated. Your other changes are still awaiting approval.")
+                return redirect("profile")
             change = form.save(commit=False)
             change.user = request.user
             change.save()
@@ -137,9 +141,13 @@ def profile(request):
         form = ProfileChangeRequestForm(
             initial={
                 "first_name": request.user.first_name,
+                "middle_name": request.user.middle_name,
                 "last_name": request.user.last_name,
                 "email": request.user.email,
                 "avatar_choice": request.user.avatar_choice,
+                "contact_numbers": "\n".join(
+                    request.user.contact_numbers.values_list("number", flat=True)
+                ),
             }
         )
 

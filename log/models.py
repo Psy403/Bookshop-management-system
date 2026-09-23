@@ -24,3 +24,14 @@ class ActivityLog(models.Model):
     def __str__(self):
         username = self.user.username if self.user else "Anonymous"
         return f"{username} {self.action} {self.path}"
+
+
+class ActivityLogRead(models.Model):
+    user = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
+    activity = models.ForeignKey(ActivityLog, on_delete=models.CASCADE, related_name="reads")
+    read_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=("user", "activity"), name="unique_activity_read")
+        ]

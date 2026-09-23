@@ -4,19 +4,27 @@ from decimal import Decimal, InvalidOperation
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.shortcuts import redirect, render
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.conf import settings
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import mm
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from xml.sax.saxutils import escape
 
 from books.models import stock
 from log.utils import record_activity
 from sales.models import Sale, SaleItem
-from .models import Return
+from .models import Return, ReturnBatch
 
 
 @login_required
 def return_list(request):
     returns = Return.objects.select_related(
-        "sale", "sale__book", "sale_item", "sale_item__book"
+        "sale", "sale__book", "sale_item", "sale_item__book", "batch"
     ).all().order_by(
         "-return_date",
         "-id",
@@ -38,85 +46,58 @@ def return_list(request):
 
 @login_required
 def return_create(request):
-    sales = list(Sale.objects.prefetch_related("items__book", "items__returns")
-                 .select_related("book").order_by("-sale_at"))
-    eligible_sales = []
-    for sale in sales:
-        sale.returned_quantity = sum(
-            item.return_quantity
-            if item.return_quantity is not None
-            else sale.quantity
-            for item in sale.returns.all()
-        ) if not sale.items.exists() else 0
-        if not sale.items.exists() and sale.quantity > sale.returned_quantity:
-            sale.remaining_quantity = sale.quantity - sale.returned_quantity
-            sale.unit_price = sale.total_price / sale.quantity
-            sale.sale_date = timezone.localtime(sale.sale_at).date()
-            sale.is_legacy = True
-            eligible_sales.append(sale)
-        for sale_item in sale.items.all():
-            sale_item.returned_quantity = sum(
-                item.return_quantity or sale_item.quantity
-                for item in sale_item.returns.all()
-            )
-            sale_item.remaining_quantity = sale_item.quantity - sale_item.returned_quantity
-            if sale_item.remaining_quantity > 0:
-                sale_item.unit_price = sale_item.unit_price
-                sale_item.sale_date = timezone.localtime(sale.sale_at).date()
-                eligible_sales.append(sale_item)
+    bill_id = request.POST.get("bill_id", request.GET.get("bill_id", "")).strip()
+    sale = None
+    return_items = []
+    if bill_id.isdigit():
+        sale = Sale.objects.prefetch_related("items__book", "items__returns").filter(
+            id=int(bill_id)
+        ).first()
+        if sale:
+            for item in sale.items.all():
+                returned = sum(r.return_quantity or item.quantity for r in item.returns.all())
+                item.remaining_quantity = max(item.quantity - returned, 0)
+                if item.remaining_quantity:
+                    return_items.append(item)
+            if not sale.items.exists():
+                returned = sum(r.return_quantity or sale.quantity for r in sale.returns.all())
+                sale.remaining_quantity = max(sale.quantity - returned, 0)
+                sale.unit_price = sale.total_price / sale.quantity
+                if sale.remaining_quantity:
+                    return_items.append(sale)
 
-    if request.method == "POST":
-        sale_item_id = request.POST.get("sale_item", "").strip()
-        sale_id = request.POST.get("sale", "").strip()
-        return_quantity = request.POST.get("return_quantity", "").strip()
+    if request.method == "POST" and request.POST.get("submit_return"):
+        return_item_ids = request.POST.getlist("return_item")
         return_date = request.POST.get("return_date", "").strip()
         return_type = request.POST.get("return_type", "").strip()
         reason = request.POST.get("reason", "").strip()
         return_status = request.POST.get("return_status", "").strip()
 
         context = {
-            "sales": sales,
-            "eligible_sales": eligible_sales,
-            "sale_id": sale_id,
-            "return_quantity": return_quantity,
+            "bill_id": bill_id,
+            "sale": sale,
+            "return_items": return_items,
             "return_date": return_date,
             "return_type": return_type,
             "reason": reason,
             "return_status": return_status,
         }
 
-        if not all(
-            [sale_item_id or sale_id, return_quantity, return_date, return_type, reason, return_status]
-        ):
+        if not all([sale, return_item_ids, return_date, return_type, reason, return_status]):
             messages.error(request, "All return fields are required.")
             return render(request, "books/return_form.html", context)
 
         try:
-            sale_item = SaleItem.objects.select_related("sale", "book").get(
-                id=sale_item_id
-            ) if sale_item_id else None
-            sale = sale_item.sale if sale_item else Sale.objects.get(id=sale_id)
-            parsed_quantity = int(return_quantity)
             parsed_date = date.fromisoformat(return_date)
-        except (Sale.DoesNotExist, TypeError, ValueError):
+        except (TypeError, ValueError):
             messages.error(request, "Select a valid sale, quantity, and date.")
             return render(request, "books/return_form.html", context)
 
         try:
             with transaction.atomic():
-                if sale_item:
-                    sale_item = SaleItem.objects.select_for_update().select_related(
-                        "sale", "book"
-                    ).get(id=sale_item.id)
-                    sale = Sale.objects.select_for_update().get(id=sale_item.sale_id)
-                    book = sale_item.book
-                    original_quantity = sale_item.quantity
-                else:
-                    sale = Sale.objects.select_for_update().select_related("book").get(
-                        id=sale.id
-                    )
-                    book = sale.book
-                    original_quantity = sale.quantity
+                sale = Sale.objects.select_for_update().prefetch_related(
+                    "items__returns"
+                ).get(id=sale.id)
                 sale_date = timezone.localtime(sale.sale_at).date()
 
                 if parsed_date != sale_date:
@@ -127,52 +108,78 @@ def return_create(request):
                     )
                     return render(request, "books/return_form.html", context)
 
-                returned_quantity = sum(
-                    item.return_quantity
-                    if item.return_quantity is not None
-                    else original_quantity
-                    for item in (
-                        Return.objects.filter(sale_item=sale_item)
-                        if sale_item
-                        else Return.objects.filter(sale=sale)
+                batch = ReturnBatch.objects.create(sale=sale, return_date=parsed_date)
+                total_amount = Decimal("0")
+                selected = {str(item.id): item for item in sale.items.all()}
+                if not selected:
+                    selected = {str(sale.id): sale}
+                for item_id in return_item_ids:
+                    item = selected.get(item_id)
+                    quantity_text = request.POST.get(f"quantity_{item_id}", "").strip()
+                    quantity = int(quantity_text)
+                    returned = sum(r.return_quantity or item.quantity for r in item.returns.all())
+                    remaining = item.quantity - returned
+                    if quantity <= 0 or quantity > remaining:
+                        raise ValueError("Return quantity exceeds the remaining quantity.")
+                    book = item.book
+                    unit_price = getattr(item, "unit_price", sale.total_price / sale.quantity)
+                    amount = unit_price * quantity
+                    book_stock = stock.objects.select_for_update().get(book=book)
+                    Return.objects.create(
+                        batch=batch, sale=None if hasattr(item, "sale") else sale,
+                        sale_item=item if hasattr(item, "sale") else None,
+                        return_quantity=quantity, return_date=parsed_date,
+                        return_amount=amount, return_type=return_type,
+                        reason=reason, return_status=return_status,
                     )
-                )
-                remaining_quantity = original_quantity - returned_quantity
-                if parsed_quantity <= 0 or parsed_quantity > remaining_quantity:
-                    messages.error(
-                        request,
-                        f"Only {remaining_quantity} item(s) remain available for return.",
-                    )
-                    return render(request, "books/return_form.html", context)
-
-                book_stock = stock.objects.select_for_update().get(book=book)
-                unit_price = sale_item.unit_price if sale_item else sale.total_price / sale.quantity
-                parsed_amount = unit_price * parsed_quantity
-                Return.objects.create(
-                    sale=sale if not sale_item else None,
-                    sale_item=sale_item,
-                    return_quantity=parsed_quantity,
-                    return_date=parsed_date,
-                    return_amount=parsed_amount,
-                    return_type=return_type,
-                    reason=reason,
-                    return_status=return_status,
-                )
-                book_stock.quantity += parsed_quantity
-                book_stock.save(update_fields=["quantity"])
-                book.is_available = True
-                book.save(update_fields=["is_available"])
+                    book_stock.quantity += quantity
+                    book_stock.save(update_fields=["quantity"])
+                    book.is_available = True
+                    book.save(update_fields=["is_available"])
+                    total_amount += amount
+                batch.total_amount = total_amount
+                batch.save(update_fields=["total_amount"])
         except stock.DoesNotExist:
-            messages.error(request, "Stock record does not exist for this book.")
+            messages.error(request, "Stock record does not exist for one of the selected books.")
+            return render(request, "books/return_form.html", context)
+        except ValueError as error:
+            messages.error(request, str(error))
             return render(request, "books/return_form.html", context)
 
         messages.success(request, "Return recorded and stock has been restocked.")
         record_activity(
             request,
-            f'Book "{book.title}" returned, quantity {parsed_quantity}, '
-            f"refund amount Rs. {parsed_amount}. Stock was restocked.",
+            f"Return recorded for bill {sale.id}, refund amount Rs. {batch.total_amount}.",
             action="RETURN",
         )
-        return redirect("return_list")
+        return redirect("return_report", batch_id=batch.id)
 
-    return render(request, "books/return_form.html", {"eligible_sales": eligible_sales})
+    return render(request, "books/return_form.html", {
+        "bill_id": bill_id, "sale": sale, "return_items": return_items,
+    })
+
+
+@login_required
+def return_report(request, batch_id):
+    batch = get_object_or_404(ReturnBatch.objects.select_related("sale"), id=batch_id)
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="return-report-{batch.id}.pdf"'
+    document = SimpleDocTemplate(response, pagesize=A4, rightMargin=18*mm, leftMargin=18*mm)
+    styles = getSampleStyleSheet()
+    data = [["Return ID", str(batch.id)], ["Bill ID", str(batch.sale_id)],
+            ["Date", batch.return_date.strftime("%B %d, %Y")],
+            ["Store", getattr(settings, "BOOKSHOP_NAME", "Book Shop Management")]]
+    rows = [["S.N.", "Books", "Quantity", "Per Unit Price", "Return Amount"]]
+    for index, item in enumerate(batch.items.select_related("sale_item__book", "sale__book"), 1):
+        source = item.sale_item or item.sale
+        rows.append([str(index), escape(source.book.title), str(item.return_quantity),
+                     f"Rs. {item.return_amount / item.return_quantity:.2f}",
+                     f"Rs. {item.return_amount:.2f}"])
+    story = [Paragraph(getattr(settings, "BOOKSHOP_NAME", "Book Shop Management"), styles["Title"]),
+             Paragraph("Return Report", styles["Heading2"]), Table(data, colWidths=[35*mm, 125*mm]),
+             Spacer(1, 8), Table(rows)]
+    story[-1].setStyle(TableStyle([("GRID", (0,0), (-1,-1), .5, colors.grey),
+                                   ("BACKGROUND", (0,0), (-1,0), colors.lightgrey)]))
+    story.append(Paragraph("Thank you for shopping with us.", styles["Normal"]))
+    document.build(story)
+    return response

@@ -212,6 +212,7 @@ def sale_report(request, sale_id):
     )
 
     report_data = [
+        ["Bill ID", str(sale.id)],
         ["Date", generated_at.strftime("%B %d, %Y")],
         ["Time", generated_at.strftime("%I:%M:%S %p")],
         ["Store", getattr(settings, "BOOKSHOP_NAME", "Book Shop Management")],

@@ -1,106 +1,76 @@
 {% extends "base.html" %}
-
 {% block title %}New Return{% endblock %}
-
 {% block page_label %}Returns{% endblock %}
-
 {% block page_title %}Record Return{% endblock %}
-
 {% block content %}
-<div class="mx-auto max-w-3xl">
-    <div class="mb-6">
-        <a href="{% url 'return_list' %}" class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-slate-900">
-            <i class="fa-solid fa-arrow-left"></i>
-            Back to Returns
-        </a>
-    </div>
+<div class="mx-auto max-w-4xl space-y-6">
+  <a href="{% url 'return_list' %}" class="text-sm font-medium text-slate-500 hover:text-slate-900">
+    <i class="fa-solid fa-arrow-left"></i> Back to Returns
+  </a>
+  <form method="get" class="flex gap-3 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <input name="bill_id" value="{{ bill_id }}" type="number" min="1" required
+           placeholder="Enter Bill ID"
+           class="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm">
+    <button class="rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white">Find Bill</button>
+  </form>
 
-    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <form method="POST">
-            {% csrf_token %}
-            <div class="grid gap-6 p-6 sm:grid-cols-2">
-                <div class="sm:col-span-2">
-                    <label for="sale" class="mb-2 block text-sm font-semibold text-slate-700">Sale to Return</label>
-                    <select id="sale_item" name="sale_item" required
-                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
-                        <option value="">Select a sale</option>
-                        {% for sale in eligible_sales %}
-                        <option value="{{ sale.id }}" data-sale-date="{{ sale.sale_date|date:'Y-m-d' }}" data-unit-price="{{ sale.unit_price }}" data-remaining="{{ sale.remaining_quantity }}">
-                            {% if sale.book %}{{ sale.book.title }}{% else %}{{ sale.sale.book.title }}{% endif %} — {{ sale.remaining_quantity }} remaining — Rs. {{ sale.unit_price|floatformat:2 }} per item — {{ sale.sale_date|date:"M d, Y h:i A" }}
-                        </option>
-                        {% empty %}
-                        <option value="" disabled>No eligible sales available</option>
-                        {% endfor %}
-                    </select>
-                    <p class="mt-2 text-xs text-slate-500">Only sales that have not already been returned are shown.</p>
-                </div>
-                <div>
-                    <label for="return_quantity" class="mb-2 block text-sm font-semibold text-slate-700">Items to Return</label>
-                    <input type="number" id="return_quantity" name="return_quantity" value="{{ return_quantity|default:'' }}" min="1" required
-                           class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
-                </div>
-                <div>
-                    <label for="return_date" class="mb-2 block text-sm font-semibold text-slate-700">Return Date</label>
-                    <input type="date" id="return_date" name="return_date" value="{{ return_date|default:'' }}" required
-                           class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
-                    <p class="mt-2 text-xs text-slate-500">The return date must match the selected sale date.</p>
-                </div>
-                <div>
-                    <label for="return_amount" class="mb-2 block text-sm font-semibold text-slate-700">Return Amount</label>
-                    <input type="number" id="return_amount" name="return_amount" value="{{ return_amount|default:'' }}" readonly
-                           class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
-                    <p class="mt-2 text-xs text-slate-500">Calculated automatically from the selected sale and quantity.</p>
-                </div>
-                <div>
-                    <label for="return_type" class="mb-2 block text-sm font-semibold text-slate-700">Return Type</label>
-                    <input type="text" id="return_type" name="return_type" value="{{ return_type|default:'' }}" placeholder="Refund, exchange, etc." required
-                           class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
-                </div>
-                <div>
-                    <label for="return_status" class="mb-2 block text-sm font-semibold text-slate-700">Return Status</label>
-                    <input type="text" id="return_status" name="return_status" value="{{ return_status|default:'' }}" placeholder="Pending, approved, completed..." required
-                           class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="reason" class="mb-2 block text-sm font-semibold text-slate-700">Reason</label>
-                    <textarea id="reason" name="reason" rows="4" required
-                              class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-100">{{ reason|default:'' }}</textarea>
-                </div>
-            </div>
-            <div class="flex flex-col-reverse gap-3 border-t border-slate-200 bg-slate-50 px-6 py-5 sm:flex-row sm:justify-end">
-                <a href="{% url 'return_list' %}" class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Cancel</a>
-                <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-                    <i class="fa-solid fa-plus"></i>
-                    Record Return
-                </button>
-            </div>
-        </form>
+  {% if sale %}
+  <form method="post" class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+    {% csrf_token %}
+    <input type="hidden" name="bill_id" value="{{ sale.id }}">
+    <div class="border-b border-slate-200 bg-slate-50 px-6 py-4">
+      <h2 class="font-semibold text-slate-900">Bill #{{ sale.id }}</h2>
+      <p class="text-sm text-slate-500">Sale date: {{ sale.sale_at|date:"M d, Y h:i A" }}</p>
     </div>
+    <div class="overflow-x-auto p-6">
+      <table class="w-full text-left text-sm">
+        <thead><tr class="border-b text-xs uppercase text-slate-500">
+          <th class="px-3 py-3">Return</th><th class="px-3 py-3">Book</th><th class="px-3 py-3">Purchased</th><th class="px-3 py-3">Remaining</th><th class="px-3 py-3">Quantity</th><th class="px-3 py-3">Amount</th>
+        </tr></thead>
+        <tbody>
+        {% for item in return_items %}
+          <tr class="border-b">
+            <td class="px-3 py-3"><input type="checkbox" name="return_item" value="{{ item.id }}" data-price="{{ item.unit_price|default_if_none:item.book.price }}" class="return-check"></td>
+            <td class="px-3 py-3 font-medium">{{ item.book.title }}</td>
+            <td class="px-3 py-3">{{ item.quantity }}</td>
+            <td class="px-3 py-3">{{ item.remaining_quantity }}</td>
+            <td class="px-3 py-3"><input type="number" name="quantity_{{ item.id }}" value="1" min="1" max="{{ item.remaining_quantity }}" data-remaining="{{ item.remaining_quantity }}" class="return-quantity w-24 rounded-lg border px-2 py-2"></td>
+            <td class="px-3 py-3 return-amount">Rs. 0.00</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="px-3 py-8 text-center text-slate-500">No items remain available for return.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if return_items %}
+    <div class="grid gap-5 border-t border-slate-200 p-6 sm:grid-cols-2">
+      <div><label class="mb-2 block text-sm font-semibold">Return Date</label><input type="date" name="return_date" value="{{ sale.sale_at|date:'Y-m-d' }}" min="{{ sale.sale_at|date:'Y-m-d' }}" max="{{ sale.sale_at|date:'Y-m-d' }}" required class="w-full rounded-xl border px-4 py-3"></div>
+      <div><label class="mb-2 block text-sm font-semibold">Return Type</label><input name="return_type" required placeholder="Refund or exchange" class="w-full rounded-xl border px-4 py-3"></div>
+      <div><label class="mb-2 block text-sm font-semibold">Return Status</label><input name="return_status" required value="Completed" class="w-full rounded-xl border px-4 py-3"></div>
+      <div><label class="mb-2 block text-sm font-semibold">Total Refund</label><input id="total-refund" readonly class="w-full rounded-xl border bg-slate-50 px-4 py-3"></div>
+      <div class="sm:col-span-2"><label class="mb-2 block text-sm font-semibold">Reason</label><textarea name="reason" required rows="3" class="w-full rounded-xl border px-4 py-3"></textarea></div>
+    </div>
+    <div class="flex justify-end border-t border-slate-200 bg-slate-50 px-6 py-5"><button name="submit_return" value="1" class="rounded-xl bg-slate-900 px-6 py-3 text-sm font-semibold text-white">Record Return &amp; Generate Bill</button></div>
+    {% endif %}
+  </form>
+  {% elif bill_id %}
+    <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">No bill was found for ID {{ bill_id }}.</div>
+  {% endif %}
 </div>
 <script>
-    const saleSelect = document.getElementById("sale_item");
-    const quantityInput = document.getElementById("return_quantity");
-    const amountInput = document.getElementById("return_amount");
-    function updateReturnAmount() {
-        const option = saleSelect.options[saleSelect.selectedIndex];
-        const price = Number(option?.dataset.unitPrice || 0);
-        const remaining = Number(option?.dataset.remaining || 0);
-        const saleDate = option?.dataset.saleDate || "";
-        document.getElementById("return_date").min = saleDate;
-        document.getElementById("return_date").max = saleDate;
-        if (saleDate) {
-            document.getElementById("return_date").value = saleDate;
-        }
-        quantityInput.max = remaining || "";
-        if (Number(quantityInput.value) > remaining) {
-            quantityInput.value = remaining;
-        }
-        amountInput.value = price && quantityInput.value
-            ? (price * Number(quantityInput.value)).toFixed(2)
-            : "";
-    }
-    saleSelect.addEventListener("change", updateReturnAmount);
-    quantityInput.addEventListener("input", updateReturnAmount);
-    updateReturnAmount();
+  function updateRefund() {
+    let total = 0;
+    document.querySelectorAll(".return-check").forEach((check) => {
+      const row = check.closest("tr");
+      const quantity = row.querySelector(".return-quantity");
+      const amount = check.checked ? Number(check.dataset.price) * Number(quantity.value || 0) : 0;
+      row.querySelector(".return-amount").textContent = `Rs. ${amount.toFixed(2)}`;
+      total += amount;
+    });
+    document.getElementById("total-refund").value = total ? `Rs. ${total.toFixed(2)}` : "";
+  }
+  document.querySelectorAll(".return-check, .return-quantity").forEach((element) => element.addEventListener("input", updateRefund));
+  updateRefund();
 </script>
 {% endblock %}

@@ -5,32 +5,74 @@ from django.contrib import messages
 from django.utils import timezone
 
 from log.models import ActivityLog
-from .models import ProfileChangeRequest, User, ModulePermission
+from .forms import StaffCreationForm
+from .models import ContactNumber, ProfileChangeRequest, User, ModulePermission
 
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
+    add_form = StaffCreationForm
 
     fieldsets = UserAdmin.fieldsets + (
         ("Role Info", {
-            "fields": ("role", "profile_picture", "avatar_choice"),
+            "fields": (
+                "role",
+                "middle_name",
+                "phone_number",
+                "contact_numbers_display",
+                "hiring_date",
+                "profile_picture",
+                "avatar_choice",
+            ),
         }),
     )
 
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ("Role Info", {
-            "fields": ("role",),
-        }),
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "username",
+                    "first_name",
+                    "middle_name",
+                    "last_name",
+                    "phone_number",
+                    "role",
+                    "hiring_date",
+                    "email",
+                    "is_active",
+                    "password1",
+                    "password2",
+                ),
+            },
+        ),
     )
 
     list_display = (
+        "id",
         "username",
+        "first_name",
+        "middle_name",
+        "last_name",
+        "phone_number",
+        "hiring_date",
         "email",
         "role",
         "is_active",
     )
 
     list_filter = ("role",)
+
+    @admin.display(description="Contact numbers")
+    def contact_numbers_display(self, obj):
+        return ", ".join(obj.contact_numbers.values_list("number", flat=True))
+
+
+@admin.register(ContactNumber)
+class ContactNumberAdmin(admin.ModelAdmin):
+    list_display = ("user", "number")
+    search_fields = ("user__username", "number")
 
 
 @admin.register(ModulePermission)
@@ -62,16 +104,18 @@ class ProfileChangeRequestAdmin(admin.ModelAdmin):
         for change in queryset.filter(status="PENDING").select_related("user"):
             user = change.user
             user.first_name = change.first_name
+            user.middle_name = change.middle_name
             user.last_name = change.last_name
             user.email = change.email
-            user.avatar_choice = change.avatar_choice
-            if change.profile_picture:
-                user.profile_picture.save(
-                    change.profile_picture.name.split("/")[-1],
-                    change.profile_picture.file,
-                    save=False,
-                )
             user.save()
+            user.contact_numbers.all().delete()
+            ContactNumber.objects.bulk_create(
+                [
+                    ContactNumber(user=user, number=number.strip())
+                    for number in change.contact_numbers.splitlines()
+                    if number.strip()
+                ]
+            )
             change.status = "APPROVED"
             change.reviewed_by = request.user
             change.reviewed_at = timezone.now()

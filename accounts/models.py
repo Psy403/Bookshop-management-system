@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -14,6 +15,9 @@ class User(AbstractUser):
         choices=ROLE_CHOICES,
         default="STAFF",
     )
+    middle_name = models.CharField(max_length=150, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True)
+    hiring_date = models.DateField(default=timezone.localdate)
     profile_picture = models.ImageField(
         upload_to="profile_pictures/",
         null=True,
@@ -23,6 +27,14 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class ContactNumber(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contact_numbers")
+    number = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.number
 
 
 class ModulePermission(models.Model):
@@ -69,12 +81,8 @@ class ProfileChangeRequest(models.Model):
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField(blank=True)
-    profile_picture = models.ImageField(
-        upload_to="pending_profile_pictures/",
-        null=True,
-        blank=True,
-    )
-    avatar_choice = models.PositiveSmallIntegerField(default=1)
+    middle_name = models.CharField(max_length=150, blank=True)
+    contact_numbers = models.TextField(blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="PENDING")
     requested_at = models.DateTimeField(auto_now_add=True)
     reviewed_at = models.DateTimeField(null=True, blank=True)

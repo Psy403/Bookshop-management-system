@@ -12,6 +12,11 @@
         <h2 class="text-xl font-semibold text-slate-900">Activity Logs</h2>
         <p class="mt-1 text-sm text-slate-500">Recent staff activity in the system.</p>
     </div>
+    <form method="get" class="flex flex-wrap gap-3">
+        <input name="search" value="{{ search }}" placeholder="Search by user name" class="rounded-xl border border-slate-200 px-4 py-2 text-sm">
+        <input type="date" name="date" value="{{ date_value }}" class="rounded-xl border border-slate-200 px-4 py-2 text-sm">
+        <button class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Filter</button>
+    </form>
 
     <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div class="overflow-x-auto">
@@ -28,7 +33,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
-                    {% for activity in activities %}
+                    {% for activity in page_obj %}
                     <tr class="hover:bg-slate-50">
                         <td class="px-5 py-4 text-sm text-slate-600">{{ activity.created_at|date:"M d, Y h:i A" }}</td>
                         <td class="px-5 py-4 text-sm font-semibold text-slate-700">{{ activity.user|default:"Anonymous" }}</td>
@@ -45,6 +50,13 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+    <div class="flex items-center justify-between text-sm">
+        <span class="text-slate-500">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        <div class="flex gap-2">
+            {% if page_obj.has_previous %}<a class="rounded-lg border px-3 py-2" href="?search={{ search|urlencode }}&date={{ date_value }}&page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+            {% if page_obj.has_next %}<a class="rounded-lg border px-3 py-2" href="?search={{ search|urlencode }}&date={{ date_value }}&page={{ page_obj.next_page_number }}">Next</a>{% endif %}
         </div>
     </div>
 </section>

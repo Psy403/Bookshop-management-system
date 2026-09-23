@@ -33,5 +33,21 @@ class stock(models.Model):
     book = models.OneToOneField(Book, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
+    def save(self, *args, **kwargs):
+        previous_quantity = None
+        if self.pk:
+            previous_quantity = (
+                type(self).objects.filter(pk=self.pk)
+                .values_list("quantity", flat=True)
+                .first()
+            )
+        super().save(*args, **kwargs)
+        if self.quantity < 20 and (
+            previous_quantity is None or previous_quantity >= 20
+        ):
+            from log.utils import notify_low_stock
+
+            notify_low_stock(self.book, self.quantity, previous_quantity)
+
     def __str__(self):
         return f"{self.book.title} - {self.quantity} in stock"
