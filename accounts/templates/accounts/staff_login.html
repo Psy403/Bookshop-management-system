@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,7 +7,6 @@
 
     <title>Staff Login | Mart Management System</title>
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Font Awesome -->
@@ -14,33 +14,34 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     >
+    <link rel="stylesheet" href="{% static 'css/staff-login.css' %}">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="min-h-screen bg-slate-100">
+<body class="login-page min-h-screen">
 
     <div class="min-h-screen flex items-center justify-center px-4 py-8">
 
         <div class="w-full max-w-md">
 
             <!-- Login Card -->
-            <div class="bg-white rounded-2xl shadow-xl p-8">
+            <div class="login-card rounded-2xl shadow-xl p-8">
 
                 <!-- Logo / Icon -->
                 <div class="flex justify-center mb-5">
-                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-                        <i class="fa-solid fa-user-tie text-2xl text-blue-600"></i>
+                    <div class="login-icon-badge w-16 h-16 rounded-full flex items-center justify-center">
+                        <i class="login-brand-icon fa-solid fa-user-tie text-2xl"></i>
                     </div>
                 </div>
 
                 <!-- Heading -->
                 <div class="text-center mb-8">
-                    <h1 class="text-2xl font-bold text-slate-800">
+                    <h1 class="login-primary-text text-2xl font-bold">
                         Staff Login
                     </h1>
 
-                    <p class="text-sm text-slate-500 mt-2">
+                    <p class="login-muted text-sm mt-2">
                         Login to your staff account
                     </p>
                 </div>
@@ -55,7 +56,7 @@
 
                         <label
                             for="username"
-                            class="block text-sm font-medium text-slate-700 mb-2"
+                            class="login-secondary-text block text-sm font-medium mb-2"
                         >
                             Username
                         </label>
@@ -63,7 +64,7 @@
                         <div class="relative">
 
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                <i class="fa-solid fa-user text-slate-400"></i>
+                                <i class="login-muted fa-solid fa-user"></i>
                             </div>
 
                             <input
@@ -74,7 +75,7 @@
                                 autocomplete="username"
                                 required
                                 autofocus
-                                class="w-full rounded-lg border border-slate-300 bg-white py-3 pl-10 pr-4 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                class="login-input w-full rounded-lg border py-3 pl-10 pr-4 text-sm outline-none transition"
                             >
 
                         </div>
@@ -86,7 +87,7 @@
 
                         <label
                             for="password"
-                            class="block text-sm font-medium text-slate-700 mb-2"
+                            class="login-secondary-text block text-sm font-medium mb-2"
                         >
                             Password
                         </label>
@@ -94,7 +95,7 @@
                         <div class="relative">
 
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                <i class="fa-solid fa-lock text-slate-400"></i>
+                                <i class="login-muted fa-solid fa-lock"></i>
                             </div>
 
                             <input
@@ -104,50 +105,26 @@
                                 placeholder="Enter your password"
                                 autocomplete="current-password"
                                 required
-                                class="w-full rounded-lg border border-slate-300 bg-white py-3 pl-10 pr-12 text-sm text-slate-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                class="login-input w-full rounded-lg border py-3 pl-10 pr-12 text-sm outline-none transition"
                             >
 
-                            <!-- Show / Hide Password -->
                             <button
                                 type="button"
-                                onclick="togglePassword()"
-                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600"
+                                data-toggle-password
+                                aria-label="Show password"
+                                class="login-muted absolute inset-y-0 right-0 flex items-center pr-3"
                             >
-                                <i
-                                    id="passwordIcon"
-                                    class="fa-solid fa-eye"
-                                ></i>
+                                <i id="passwordIcon" class="fa-solid fa-eye"></i>
                             </button>
 
                         </div>
 
                     </div>
 
-                    <!-- Remember Me  -->
-                    <div class="flex items-center justify-between mb-6">
-
-                        <label class="flex items-center gap-2 cursor-pointer">
-
-                            <input
-                                type="checkbox"
-                                name="remember_me"
-                                class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                            >
-
-                            <span class="text-sm text-slate-600">
-                                Remember me
-                            </span>
-
-                        </label>
-
-                        
-
-                    </div>
-
                     <!-- Login Button -->
                     <button
                         type="submit"
-                        class="w-full rounded-lg bg-blue-600 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        class="login-submit w-full rounded-lg py-3 text-sm font-semibold text-white shadow-md transition duration-200 focus:outline-none"
                     >
                         <i class="fa-solid fa-right-to-bracket mr-2"></i>
                         Login
@@ -156,13 +133,13 @@
                 </form>
 
                 <!-- Staff Account Information -->
-                <div class="mt-7 text-center border-t border-slate-100 pt-6">
+                <div class="login-footer mt-7 text-center border-t pt-6">
 
-                    <p class="text-sm text-slate-500">
+                    <p class="login-muted text-sm">
                         Staff accounts are created by the administrator.
                     </p>
 
-                    <p class="text-xs text-slate-400 mt-1">
+                    <p class="login-disabled text-xs mt-1">
                         Contact your administrator if you need an account.
                     </p>
 
@@ -173,7 +150,7 @@
             <!-- Footer -->
             <div class="text-center mt-6">
 
-                <p class="text-xs text-slate-400">
+                <p class="login-muted text-xs">
                     © {% now "Y" %} Mart Management System
                 </p>
 
@@ -183,48 +160,15 @@
 
     </div>
 
-    <!-- Password Toggle -->
-    <script>
-        function togglePassword() {
-
-            const password = document.getElementById("password");
-            const icon = document.getElementById("passwordIcon");
-
-            if (password.type === "password") {
-
-                password.type = "text";
-
-                icon.classList.remove("fa-eye");
-                icon.classList.add("fa-eye-slash");
-
-            } else {
-
-                password.type = "password";
-
-                icon.classList.remove("fa-eye-slash");
-                icon.classList.add("fa-eye");
-
-            }
-        }
-    </script>
-
     {% if messages %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            {% for message in messages %}
-            Swal.fire({
-                toast: true,
-                position: "top-end",
-                icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}",
-                title: "{{ message|escapejs }}",
-                showConfirmButton: false,
-                timer: 3500,
-                timerProgressBar: true
-            });
-            {% endfor %}
-        });
-    </script>
+    <div id="staff-login-messages" hidden>
+        {% for message in messages %}
+        <div data-icon="{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
     {% endif %}
+
+    <script src="{% static 'js/staff-login.js' %}" defer></script>
 
 </body>
 </html>

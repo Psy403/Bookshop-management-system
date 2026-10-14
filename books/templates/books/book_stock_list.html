@@ -145,7 +145,7 @@ Book Stock
                                     </p>
 
                                     <p class="text-xs text-slate-500">
-                                        Published {{ book.publication_date }}
+                                        Published {{ book.publication_year|default:"Year not specified" }}
                                     </p>
                                 </div>
 

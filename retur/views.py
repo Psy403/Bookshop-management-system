@@ -45,7 +45,7 @@ def return_list(request):
 
 
 @login_required
-def return_create(request):
+def return_create(request, template_name="books/return_form.html"):
     bill_id = request.POST.get("bill_id", request.GET.get("bill_id", "")).strip()
     sale = None
     return_items = []
@@ -85,13 +85,13 @@ def return_create(request):
 
         if not all([sale, return_item_ids, return_date, return_type, reason, return_status]):
             messages.error(request, "All return fields are required.")
-            return render(request, "books/return_form.html", context)
+            return render(request, template_name, context)
 
         try:
             parsed_date = date.fromisoformat(return_date)
         except (TypeError, ValueError):
             messages.error(request, "Select a valid sale, quantity, and date.")
-            return render(request, "books/return_form.html", context)
+            return render(request, template_name, context)
 
         try:
             with transaction.atomic():
@@ -106,7 +106,7 @@ def return_create(request):
                         f"The return date must be {sale_date.strftime('%B %d, %Y')}, "
                         "the same date as the sale.",
                     )
-                    return render(request, "books/return_form.html", context)
+                    return render(request, template_name, context)
 
                 batch = ReturnBatch.objects.create(sale=sale, return_date=parsed_date)
                 total_amount = Decimal("0")
@@ -133,18 +133,23 @@ def return_create(request):
                         reason=reason, return_status=return_status,
                     )
                     book_stock.quantity += quantity
-                    book_stock.save(update_fields=["quantity"])
+                    book_stock.save(update_fields=["quantity"], request=request)
                     book.is_available = True
                     book.save(update_fields=["is_available"])
+                    item.total_price -= amount
+                    if hasattr(item, "sale"):
+                        item.save(update_fields=["total_price"])
+                    sale.total_price -= amount
                     total_amount += amount
+                sale.save(update_fields=["total_price"])
                 batch.total_amount = total_amount
                 batch.save(update_fields=["total_amount"])
         except stock.DoesNotExist:
             messages.error(request, "Stock record does not exist for one of the selected books.")
-            return render(request, "books/return_form.html", context)
+            return render(request, template_name, context)
         except ValueError as error:
             messages.error(request, str(error))
-            return render(request, "books/return_form.html", context)
+            return render(request, template_name, context)
 
         messages.success(request, "Return recorded and stock has been restocked.")
         record_activity(
@@ -154,7 +159,7 @@ def return_create(request):
         )
         return redirect("return_report", batch_id=batch.id)
 
-    return render(request, "books/return_form.html", {
+    return render(request, template_name, {
         "bill_id": bill_id, "sale": sale, "return_items": return_items,
     })
 

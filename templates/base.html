@@ -16,12 +16,17 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer" />
 
+<link rel="stylesheet" href="{% static 'css/theme.css' %}">
+{% block extra_css %}{% endblock %}
+{% if request.user.is_authenticated %}
+<meta name="staff-tab-logout-url" content="{% url 'staff_tab_logout' %}">
+{% endif %}
+
 </head>
 
+<body class="text-slate-800" data-theme="dark">
 
-<body class="bg-slate-50 text-slate-800">
-
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen theme-surface-main">
 
 
   <!-- Sidebar -->
@@ -33,7 +38,7 @@
 
 
     <!-- Header -->
-    <header class="border-b border-slate-200 bg-white/90 px-4 py-4 sm:px-6 lg:px-8">
+    <header class="theme-header border-b px-4 py-4 sm:px-6 lg:px-8">
 
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
@@ -41,13 +46,13 @@
         <!-- Page title -->
         <div>
 
-          <p class="text-sm font-semibold uppercase tracking-[0.25em] text-slate-500">
+          <p class="text-sm font-semibold uppercase tracking-[0.25em] theme-muted">
             {% block page_label %}
             Staff Portal
             {% endblock %}
           </p>
 
-          <h1 class="mt-1 text-xl font-semibold text-slate-900">
+          <h1 class="mt-1 text-xl font-semibold theme-primary-text">
             {% block page_title %}
             Book Shop management
             {% endblock %}
@@ -56,51 +61,58 @@
         </div>
         <div class="relative flex items-center gap-2">
           <div class="relative">
-            <button id="notification-button" type="button" class="relative flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm hover:bg-slate-50" aria-label="Notifications">
+            <button id="notification-button" type="button" class="theme-header-button relative flex h-11 w-11 items-center justify-center rounded-full border shadow-sm" aria-label="Notifications">
               <i class="fa-solid fa-bell"></i>
               {% if unread_notification_count %}<span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">{{ unread_notification_count|default:"" }}</span>{% endif %}
             </button>
-            <div id="notification-menu" class="absolute right-0 z-50 mt-2 hidden w-80 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
-              <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-                <p class="font-semibold text-slate-900">Recent notifications</p>
+            <div id="notification-menu" class="theme-menu absolute right-0 z-50 mt-2 hidden w-80 overflow-hidden rounded-2xl border shadow-xl">
+              <div class="theme-divider flex items-center justify-between border-b px-4 py-3">
+                <p class="font-semibold theme-primary-text">Recent notifications</p>
                 {% if unread_notification_count %}
-                <form method="post" action="{% url 'mark_all_activities_read' %}">
+                <form method="post" action="{% url 'mark_all_activities_read' %}" class="notification-read-form">
                   {% csrf_token %}
                   <input type="hidden" name="next" value="{{ request.path }}">
-                  <button class="text-xs font-semibold text-blue-600 hover:text-blue-800">Mark all as read</button>
+                  <button type="submit" class="notification-read-button text-xs font-semibold theme-link">Mark all as read</button>
                 </form>
                 {% endif %}
               </div>
               <div class="max-h-96 overflow-y-auto">
                 {% for notification in recent_notifications %}
-                <div class="border-b border-slate-100 px-4 py-3">
+                <div class="theme-divider border-b px-4 py-3">
                   <a href="{% url 'activity_list' %}?search={{ notification.user.username|urlencode }}" class="block">
-                  <p class="text-sm font-medium text-slate-800">{{ notification.details }}</p>
-                  <p class="mt-1 text-xs text-slate-500">{{ notification.created_at|timesince }} ago</p>
+                  <p class="text-sm font-medium theme-primary-text">{{ notification.details }}</p>
+                  <p class="mt-1 text-xs theme-muted">{{ notification.created_at|timesince }} ago</p>
                   </a>
-                  <form method="post" action="{% url 'mark_activity_read' notification.id %}" class="mt-2">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="text-xs font-semibold text-blue-600">Mark as read</button></form>
+                  <form method="post" action="{% url 'mark_activity_read' notification.id %}" class="notification-read-form mt-2">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button type="submit" class="notification-read-button text-xs font-semibold theme-link">Mark as read</button></form>
                 </div>
                 {% empty %}
-                <p class="px-4 py-8 text-center text-sm text-slate-500">No recent notifications.</p>
+                <p class="px-4 py-8 text-center text-sm theme-muted">No recent notifications.</p>
                 {% endfor %}
               </div>
-              <a href="{% url 'activity_list' %}" class="block border-t border-slate-100 px-4 py-3 text-center text-sm font-semibold text-blue-600 hover:bg-slate-50">See more activity</a>
+              <a href="{% url 'activity_list' %}" class="theme-divider block border-t px-4 py-3 text-center text-sm font-semibold theme-link">See more activity</a>
             </div>
           </div>
 
+          <button id="theme-toggle" type="button" class="theme-theme-toggle flex h-11 w-11 items-center justify-center rounded-full border shadow-sm" aria-label="Toggle theme">
+            <i id="theme-toggle-icon" class="fa-solid fa-moon"></i>
+          </button>
+
           <div class="relative">
-            <button id="profile-button" type="button" class="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 hover:bg-slate-100">
+            <button id="profile-button" type="button" class="theme-header-button flex items-center gap-2 rounded-full border px-3 py-2">
               {% if request.user.profile_picture %}
                 <img src="{{ request.user.profile_picture.url }}" alt="Profile" class="h-9 w-9 rounded-full object-cover">
               {% else %}
                 <img src="{% static 'accounts/avatars/avatar-' %}{{ request.user.avatar_choice }}.svg" alt="Profile" class="h-9 w-9 rounded-full">
               {% endif %}
-              <span class="hidden text-left sm:block"><span class="block text-sm font-semibold text-slate-800">{{ request.user.username }}</span><span class="block text-xs text-slate-500">{{ request.user.role }}</span></span>
-              <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+              <span class="hidden text-left sm:block"><span class="block text-sm font-semibold theme-primary-text">{{ request.user.username }}</span><span class="block text-xs theme-muted">{{ request.user.role }}</span></span>
+              <i class="fa-solid fa-chevron-down text-xs theme-muted"></i>
             </button>
-            <div id="profile-menu" class="absolute right-0 z-50 mt-2 hidden w-48 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
-              <a href="{% url 'profile' %}" class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"><i class="fa-solid fa-user w-4 text-slate-400"></i>Profile</a>
-              <a href="{% url 'staff_logout' %}" class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-red-600 hover:bg-red-50"><i class="fa-solid fa-right-from-bracket w-4"></i>Logout</a>
+            <div id="profile-menu" class="theme-menu absolute right-0 z-50 mt-2 hidden w-48 rounded-2xl border p-2 shadow-xl">
+              <a href="{% url 'profile' %}" class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm theme-secondary-text"><i class="fa-solid fa-user w-4 theme-muted"></i>Profile</a>
+              <form method="post" action="{% url 'staff_logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="theme-error-link flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm"><i class="fa-solid fa-right-from-bracket w-4"></i>Logout</button>
+              </form>
             </div>
           </div>
         </div>
@@ -111,10 +123,9 @@
 
 
     <!-- Main Content -->
-    <main class="p-4 sm:p-6 lg:p-8">
+    <main class="p-4 sm:p-6 lg:p-8 theme-surface-main">
 
-      <div class="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
-
+      <div class="theme-panel rounded-3xl border p-4 shadow-sm sm:p-6 lg:p-8">
         {% block content %}
         {% endblock content %}
 
@@ -127,37 +138,17 @@
 
 </div>
 
-<script>
-  const profileButton = document.getElementById("profile-button");
-  const profileMenu = document.getElementById("profile-menu");
-  const notificationButton = document.getElementById("notification-button");
-  const notificationMenu = document.getElementById("notification-menu");
-  profileButton?.addEventListener("click", () => profileMenu.classList.toggle("hidden"));
-  notificationButton?.addEventListener("click", () => notificationMenu.classList.toggle("hidden"));
-  document.addEventListener("click", (event) => {
-    if (!profileButton?.contains(event.target) && !profileMenu?.contains(event.target)) profileMenu?.classList.add("hidden");
-    if (!notificationButton?.contains(event.target) && !notificationMenu?.contains(event.target)) notificationMenu?.classList.add("hidden");
-  });
-</script>
-
 {% if messages %}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        {% for message in messages %}
-        Swal.fire({
-            toast: true,
-            position: "top-end",
-            icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'info' %}info{% else %}success{% endif %}",
-            title: "{{ message|escapejs }}",
-            showConfirmButton: false,
-            timer: 3500,
-            timerProgressBar: true
-        });
-        {% endfor %}
-    });
-</script>
+<div id="staff-toast-messages" hidden>
+  {% for message in messages %}
+  <div data-icon="{% if message.level_tag == 'error' %}error{% elif message.level_tag == 'warning' %}warning{% elif message.level_tag == 'info' %}info{% else %}success{% endif %}">{{ message }}</div>
+  {% endfor %}
+</div>
 {% endif %}
-
+<script src="{% static 'js/staff-portal.js' %}" defer></script>
+{% if request.user.is_authenticated %}
+<script src="{% static 'js/session-lifecycle.js' %}" defer></script>
+{% endif %}
 
 </body>
 </html>

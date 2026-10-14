@@ -1,0 +1,56 @@
+.login-page {
+  background: linear-gradient(180deg, #0B0F14 0%, #111827 100%);
+  color: #E5E7EB;
+}
+
+.login-card {
+  background: rgba(17, 24, 39, 0.95);
+  border: 1px solid #374151;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.login-icon-badge {
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.login-brand-icon {
+  color: #3B82F6;
+}
+
+.login-primary-text {
+  color: #FFFFFF;
+}
+
+.login-secondary-text {
+  color: #E5E7EB;
+}
+
+.login-muted {
+  color: #9CA3AF;
+}
+
+.login-disabled {
+  color: #687280;
+}
+
+.login-input {
+  background: rgba(17, 24, 39, 0.9);
+  border-color: #374151;
+  color: #FFFFFF;
+}
+
+.login-checkbox {
+  accent-color: #3B82F6;
+  background: #111827;
+  border-color: #374151;
+}
+
+.login-submit {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
+}
+
+.login-footer {
+  border-color: #374151;
+}

@@ -141,15 +141,16 @@ def sale_create(request):
                 )
                 book_stock = stock.objects.get(book=book)
                 book_stock.quantity -= quantity
-                book_stock.save(update_fields=["quantity"])
+                book_stock.save(update_fields=["quantity"], request=request)
                 book.is_available = book_stock.quantity > 0
                 book.save(update_fields=["is_available"])
 
         record_activity(
             request,
-            f"{len(line_items)} book type(s) sold, total quantity "
-            f"{sum(item[1] for item in line_items)}, total Rs. {total_price}.",
-            action="SALE",
+            "; ".join(
+                f"{quantity} {book.title} {'copy' if quantity == 1 else 'copies'} sold"
+                for book, quantity, _ in line_items
+            ) + f". Total sale value: Rs. {total_price}.",
         )
         messages.success(
             request,

@@ -1,0 +1,155 @@
+.profile-picture-wrap {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  flex: 0 0 auto;
+}
+
+.profile-picture {
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--primary);
+  border-radius: 9999px;
+  object-fit: cover;
+  background: var(--bg-tertiary);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.profile-picture-edit {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border: 2px solid var(--bg-secondary);
+  border-radius: 9999px;
+  background: var(--primary);
+  color: #fff;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.profile-picture-edit:hover {
+  background: var(--primary-hover);
+  transform: scale(1.05);
+}
+
+.profile-avatar-option {
+  display: block;
+  cursor: pointer;
+  border-radius: 9999px;
+}
+
+.profile-avatar-image {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 2px solid transparent;
+  border-radius: 9999px;
+  padding: 0.125rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.profile-avatar-option input:checked + .profile-avatar-image {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.profile-avatar-option input:focus-visible + .profile-avatar-image {
+  outline: 2px solid var(--primary-hover);
+  outline-offset: 2px;
+}
+
+.profile-picture-edit:focus-visible,
+.profile-primary-button:focus-visible {
+  outline: 3px solid var(--primary-hover);
+  outline-offset: 3px;
+}
+
+.profile-field-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.profile-form-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--bg-primary);
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.profile-form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.profile-field-error {
+  margin-top: 0.375rem;
+  color: var(--error);
+  font-size: 0.875rem;
+}
+
+.profile-primary-button {
+  background: var(--primary);
+  transition: background-color 0.15s ease;
+}
+
+.profile-primary-button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.profile-entry-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.625rem;
+  align-items: center;
+}
+
+.profile-entry-add,
+.profile-entry-remove {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.profile-entry-add {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+  background: color-mix(in srgb, var(--primary) 10%, var(--bg-secondary));
+  color: var(--primary-hover);
+}
+
+.profile-entry-add:hover {
+  background: color-mix(in srgb, var(--primary) 20%, var(--bg-secondary));
+}
+
+.profile-entry-remove {
+  width: 2.75rem;
+  padding: 0;
+  color: var(--error);
+}
+
+.profile-entry-remove:hover {
+  border-color: var(--error);
+  background: color-mix(in srgb, var(--error) 12%, var(--bg-secondary));
+}
+
+.profile-entry-add:focus-visible,
+.profile-entry-remove:focus-visible {
+  outline: 3px solid var(--primary-hover);
+  outline-offset: 2px;
+}

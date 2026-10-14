@@ -1,0 +1,2110 @@
+body:not(.login):not(.popup) #header {
+    align-items: center;
+    height: 76px;
+    margin-left: 18rem;
+    padding: 12px 28px;
+}
+
+body:not(.login):not(.popup) #branding {
+    display: none;
+}
+
+.admin-user-tools {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+}
+
+.admin-user-tools a {
+    color: var(--admin-primary-hover);
+    text-decoration: none;
+}
+
+.admin-user-tools form {
+    margin: 0;
+}
+
+.admin-user-tools form button {
+    background: transparent;
+    border: 0;
+    color: var(--admin-text-secondary);
+    cursor: pointer;
+    font: inherit;
+    padding: 4px;
+}
+
+.admin-user-tools form button:hover,
+.admin-user-tools form button:focus-visible {
+    color: var(--admin-primary-hover);
+}
+
+body:not(.login):not(.popup) #main {
+    display: block;
+    margin-left: 18rem;
+    min-width: 0;
+    min-height: calc(100vh - 76px);
+    transition: margin-left 180ms ease;
+}
+
+body:not(.login):not(.popup) #main:not(.shifted) {
+    margin-left: 68px;
+}
+
+body.admin-sidebar-collapsed:not(.login):not(.popup) #header,
+body.admin-sidebar-collapsed:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"],
+body.admin-sidebar-collapsed:not(.login):not(.popup) #footer {
+    margin-left: 68px;
+}
+
+@media (min-width: 1025px) {
+    body.admin-sidebar-collapsed:not(.login):not(.popup) #header,
+    body.admin-sidebar-collapsed:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"],
+    body.admin-sidebar-collapsed:not(.login):not(.popup) #footer {
+        margin-left: 68px;
+    }
+}
+
+#main > #nav-sidebar + .content,
+#main.shifted > #nav-sidebar + .content {
+    margin: 0;
+    max-width: none;
+    width: 100%;
+}
+
+#toggle-nav-sidebar.reference-sidebar-toggle {
+    flex: none;
+    height: 44px;
+    left: 17rem;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    z-index: 31;
+}
+
+body.admin-sidebar-collapsed #toggle-nav-sidebar.reference-sidebar-toggle {
+    left: 64px;
+}
+
+body:not(.login):not(.popup) #main > .content {
+    padding: 0;
+}
+
+body:not(.login):not(.popup) #main > .content > #content {
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 1600px;
+    padding: 30px 32px;
+    width: 100%;
+}
+
+body:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"] {
+    margin-left: 18rem;
+}
+
+body:not(.login):not(.popup) #container {
+    min-width: 0;
+    width: 100%;
+}
+
+.breadcrumbs {
+    margin: 0;
+    padding: 12px 32px;
+}
+
+body:not(.login):not(.popup) #footer {
+    margin-left: 18rem;
+}
+
+.reference-sidebar-toggle {
+    background: var(--admin-bg-tertiary);
+    border-color: var(--admin-border);
+    color: var(--admin-text-primary);
+}
+
+.reference-sidebar-toggle:hover {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--admin-primary-hover);
+}
+
+html body #nav-sidebar.reference-sidebar {
+    box-sizing: border-box;
+    background: var(--admin-bg-secondary) !important;
+    border: 0 !important;
+    border-right: 1px solid var(--admin-border) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 100vh;
+    left: 0;
+    margin: 0 !important;
+    max-height: 100vh !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 24px 14px 16px !important;
+    position: fixed;
+    top: 0;
+    width: 18rem !important;
+    z-index: 30;
+}
+
+.reference-sidebar-header {
+    border-bottom-color: var(--admin-border);
+    flex: 0 0 auto;
+    margin-bottom: 0;
+    padding: 0 8px 20px;
+}
+
+.reference-sidebar-brand {
+    align-items: center;
+    color: var(--admin-text-primary) !important;
+    display: flex;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.reference-sidebar-brand strong,
+.reference-sidebar-brand small {
+    display: block;
+}
+
+.reference-sidebar-brand strong {
+    color: var(--admin-text-primary);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.reference-sidebar-brand small {
+    color: var(--admin-text-tertiary);
+    font-size: 12px;
+    margin-top: 3px;
+}
+
+.reference-sidebar-workspace,
+.reference-sidebar-admin {
+    display: grid;
+    flex: 0 0 auto;
+    gap: 4px;
+}
+
+.reference-sidebar-workspace h2,
+.reference-sidebar-admin h2 {
+    color: var(--admin-text-tertiary);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin: 0 10px 6px;
+    text-transform: uppercase;
+}
+
+.reference-sidebar-link {
+    align-items: center;
+    border-radius: 9px;
+    color: var(--admin-text-secondary) !important;
+    display: flex;
+    font-size: 14px;
+    font-weight: 550;
+    gap: 12px;
+    min-height: 40px;
+    padding: 8px 10px;
+    text-decoration: none;
+    transition: background-color 140ms ease, color 140ms ease;
+}
+
+.reference-sidebar-link > span:first-child {
+    align-items: center;
+    color: var(--admin-text-tertiary);
+    display: inline-flex;
+    font-size: 17px;
+    justify-content: center;
+    width: 20px;
+}
+
+.reference-sidebar-link:hover,
+.reference-sidebar-link:focus-visible,
+.reference-sidebar-link.is-active {
+    background: rgba(59, 130, 246, 0.14);
+    color: var(--admin-primary-hover) !important;
+}
+
+.reference-sidebar-link.is-active {
+    font-weight: 700;
+}
+
+.reference-sidebar-link:hover > span:first-child,
+.reference-sidebar-link:focus-visible > span:first-child,
+.reference-sidebar-link.is-active > span:first-child {
+    color: var(--admin-primary-hover);
+}
+
+.reference-sidebar-link:focus-visible,
+.reference-sidebar-logout button:focus-visible {
+    outline: 2px solid var(--admin-primary-hover);
+    outline-offset: 2px;
+}
+
+.reference-sidebar-admin {
+    border-top: 1px solid var(--admin-border);
+    margin-top: 4px;
+    padding-top: 16px;
+}
+
+.reference-sidebar-search {
+    background: var(--admin-bg-primary);
+    border-color: var(--admin-border);
+    border-radius: 8px;
+    margin: 0 4px 5px;
+}
+
+.reference-sidebar-search input {
+    color: var(--admin-text-primary);
+}
+
+.reference-sidebar-search input::placeholder {
+    color: var(--admin-text-tertiary);
+}
+
+.reference-sidebar .module {
+    margin: 0;
+}
+
+html body #nav-sidebar.reference-sidebar .module caption {
+    color: var(--admin-text-tertiary) !important;
+    padding: 9px 10px 4px;
+    text-align: left;
+}
+
+html body #nav-sidebar.reference-sidebar .module caption a.section {
+    color: var(--admin-text-primary) !important;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.35;
+    text-transform: none;
+}
+
+html body #nav-sidebar.reference-sidebar .module caption::before {
+    content: none !important;
+}
+
+html body #nav-sidebar.reference-sidebar .module th a,
+html body #nav-sidebar.reference-sidebar .module td a {
+    color: var(--admin-text-secondary) !important;
+    border-radius: 7px;
+    font-size: 20px;
+    font-weight: 500;
+    gap: 0;
+    margin: 0;
+    min-height: 40px;
+    padding: 7px 10px;
+}
+
+html body #nav-sidebar.reference-sidebar .module th a::before {
+    content: none !important;
+    display: none;
+}
+
+html body #nav-sidebar.reference-sidebar .module td {
+    text-align: right;
+}
+
+html body #nav-sidebar.reference-sidebar .module td a.addlink {
+    align-items: center;
+    border-radius: 6px;
+    display: inline-flex;
+    font-size: 10px;
+    font-weight: 600;
+    min-height: 25px;
+    padding: 4px 7px;
+}
+
+html body #nav-sidebar.reference-sidebar .module td a.addlink::before {
+    content: none !important;
+    display: none;
+}
+
+.admin-sidebar-add-icon {
+    flex: 0 0 12px;
+    height: 12px;
+    margin-right: 4px;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.5;
+    width: 12px;
+}
+
+html body #nav-sidebar.reference-sidebar .module th a:hover,
+html body #nav-sidebar.reference-sidebar .module td a:hover,
+html body #nav-sidebar.reference-sidebar .module .current-model a,
+html body #nav-sidebar.reference-sidebar .module .current-app th a {
+    background: rgba(59, 130, 246, 0.14) !important;
+    color: var(--admin-primary-hover) !important;
+}
+
+.reference-sidebar-logout {
+    border-top: 1px solid var(--admin-border);
+    flex: 0 0 auto;
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.reference-sidebar-logout button {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 9px;
+    color: var(--admin-error);
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    font-size: 14px;
+    gap: 12px;
+    min-height: 40px;
+    padding: 8px 10px;
+    text-align: left;
+    width: 100%;
+}
+
+.reference-sidebar-logout button:hover {
+    background: rgba(239, 68, 68, 0.12);
+}
+
+body:not(.popup) #main:not(.shifted) .reference-sidebar {
+    width: 68px !important;
+}
+
+body:not(.popup) #main:not(.shifted) .reference-sidebar .reference-sidebar-header {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+body:not(.popup) #main:not(.shifted) .reference-sidebar-brand > span:last-child,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-workspace h2,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-admin h2,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-admin .reference-sidebar-search,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-apps,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-link > span:last-child,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-logout button > span:last-child {
+    display: none !important;
+}
+
+body:not(.popup) #main:not(.shifted) .reference-sidebar-workspace,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-logout {
+    align-items: center;
+}
+
+body:not(.popup) #main:not(.shifted) .reference-sidebar-link,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-logout button {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    width: 40px;
+}
+
+body:not(.popup) #main:not(.shifted) .reference-sidebar-link > span:first-child,
+body:not(.popup) #main:not(.shifted) .reference-sidebar-logout button > span:first-child {
+    font-size: 17px;
+}
+
+.admin-toast-region {
+    display: grid;
+    gap: 10px;
+    max-width: min(420px, calc(100vw - 32px));
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 10000;
+}
+
+.admin-toast {
+    align-items: flex-start;
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-left: 4px solid var(--admin-primary);
+    border-radius: 12px;
+    box-shadow: 0 14px 34px rgb(0 0 0 / 0.28);
+    color: var(--admin-text-primary);
+    display: flex;
+    gap: 12px;
+    line-height: 1.45;
+    opacity: 0;
+    padding: 14px 16px;
+    transform: translateY(-8px);
+    transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.admin-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.admin-toast[data-level="success"] {
+    border-left-color: var(--admin-success);
+}
+
+.admin-toast[data-level="warning"] {
+    border-left-color: var(--admin-warning);
+}
+
+.admin-toast[data-level="error"] {
+    border-left-color: var(--admin-error);
+}
+
+.admin-toast-icon {
+    color: var(--admin-primary-hover);
+    font-weight: 800;
+}
+
+.admin-toast[data-level="success"] .admin-toast-icon {
+    color: var(--admin-success);
+}
+
+.admin-toast[data-level="warning"] .admin-toast-icon {
+    color: var(--admin-warning);
+}
+
+.admin-toast[data-level="error"] .admin-toast-icon {
+    color: var(--admin-error);
+}
+
+.admin-toast-dismiss {
+    background: transparent;
+    border: 0;
+    color: var(--admin-text-tertiary);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    margin-left: auto;
+    padding: 0 0 0 8px;
+}
+
+.admin-toast-dismiss:hover,
+.admin-toast-dismiss:focus-visible {
+    color: var(--admin-text-primary);
+}
+
+.admin-toast-source {
+    display: none !important;
+}
+
+.admin-toast-source .messagelist,
+.admin-toast-source .errornote,
+.admin-toast-source .errorlist {
+    display: none !important;
+}
+
+@media (max-width: 1024px) {
+    body:not(.login):not(.popup) #header {
+        align-items: center;
+        flex-direction: row;
+        height: auto;
+        justify-content: flex-end;
+        min-height: 68px;
+        padding: 10px 20px;
+    }
+
+    body:not(.login):not(.popup) #main,
+    body:not(.login):not(.popup) #main.shifted,
+    body:not(.login):not(.popup) #main:not(.shifted) {
+        display: block;
+        margin-left: 68px;
+    }
+
+    body:not(.login):not(.popup) #header,
+    body:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"],
+    body:not(.login):not(.popup) #footer {
+        margin-left: 68px;
+    }
+
+    html body #main #nav-sidebar.reference-sidebar {
+        flex: 0 0 min(18rem, calc(100vw - 68px)) !important;
+        border: 1px solid var(--admin-border) !important;
+        border-radius: 0 16px 16px 0 !important;
+        box-shadow: 0 16px 40px rgb(0 0 0 / 0.32) !important;
+        height: 100vh;
+        left: 0;
+        max-height: 100vh !important;
+        top: 0;
+        width: min(18rem, calc(100vw - 68px)) !important;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar {
+        flex: 0 0 min(18rem, calc(100vw - 68px)) !important;
+        width: min(18rem, calc(100vw - 68px)) !important;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-brand > span:last-child,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-workspace h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-admin h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-admin .reference-sidebar-search,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-apps,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-link > span:last-child,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-logout button > span:last-child {
+        display: revert !important;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-workspace h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-admin h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-apps {
+        display: block !important;
+    }
+
+    body.admin-sidebar-collapsed #main #nav-sidebar.reference-sidebar {
+        transform: translateX(-110%);
+    }
+
+    body:not(.admin-sidebar-collapsed) #main #nav-sidebar.reference-sidebar {
+        transform: translateX(0);
+    }
+
+    #toggle-nav-sidebar.reference-sidebar-toggle {
+        flex: none;
+        left: 78px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    body:not(.admin-sidebar-collapsed) #toggle-nav-sidebar.reference-sidebar-toggle {
+        left: min(17rem, calc(100vw - 82px));
+    }
+
+    body:not(.login):not(.popup) #main > .content > #content {
+        padding: 24px 22px;
+    }
+
+    #changelist,
+    #content-main,
+    #content-main form,
+    .change-list .filtered {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    #changelist .results,
+    #changelist-form .results,
+    .inline-group .tabular {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    #result_list,
+    .inline-group .tabular table {
+        min-width: max-content;
+    }
+
+    #changelist-filter {
+        float: none;
+        box-sizing: border-box;
+        max-width: 100%;
+        position: static;
+        width: 100%;
+    }
+
+    .change-list .filtered .results,
+    .change-list .filtered .paginator {
+        margin-right: 0;
+    }
+
+    #changelist-search > div,
+    #changelist-form .actions {
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+
+    .aligned .form-row,
+    .form-row {
+        max-width: 100%;
+    }
+
+    .form-row input:not([type="checkbox"]):not([type="radio"]),
+    .form-row select,
+    .form-row textarea,
+    .form-row .related-widget-wrapper {
+        max-width: 100%;
+    }
+
+    .submit-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .submit-row input {
+        margin: 0;
+    }
+}
+
+.reference-sidebar-toggle {
+    align-items: center;
+    background: var(--admin-bg-tertiary);
+    border: 1px solid var(--admin-border);
+    border-left: 0;
+    border-radius: 0 9px 9px 0;
+    box-shadow: 3px 2px 8px rgb(15 23 42 / 0.12);
+    color: var(--admin-text-tertiary);
+    cursor: pointer;
+    display: inline-flex;
+    height: 44px;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, left 180ms ease, transform 180ms ease;
+    width: 26px;
+}
+
+.reference-sidebar-toggle:hover,
+.reference-sidebar-toggle:focus-visible {
+    background: rgb(59 130 246 / 0.1);
+    border-color: rgb(59 130 246 / 0.4);
+    color: var(--admin-primary);
+}
+
+.reference-sidebar-toggle:focus-visible {
+    outline: 2px solid var(--admin-primary-hover);
+    outline-offset: 3px;
+}
+
+.reference-sidebar-toggle svg,
+.reference-sidebar-link > svg,
+.reference-sidebar-search > svg,
+.reference-sidebar-logout button > svg {
+    flex: 0 0 auto;
+    height: 19px;
+    width: 19px;
+}
+
+.reference-sidebar-toggle svg {
+    height: 15px;
+    transition: transform 160ms ease;
+    width: 15px;
+}
+
+.reference-sidebar-toggle[aria-expanded="false"] svg {
+    transform: rotate(180deg);
+}
+
+.sidebar-toggle-label {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.reference-sidebar-link {
+    gap: 12px;
+    min-width: 0;
+}
+
+.reference-sidebar-link > svg {
+    color: var(--admin-text-tertiary);
+    height: 18px;
+    width: 18px;
+}
+
+.reference-sidebar-link > span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.reference-sidebar-link:hover > svg,
+.reference-sidebar-link:focus-visible > svg,
+.reference-sidebar-link.is-active > svg {
+    color: var(--admin-primary-hover);
+}
+
+.reference-sidebar-search > svg {
+    color: var(--admin-text-tertiary);
+    height: 17px;
+    width: 17px;
+}
+
+.reference-sidebar-logout button > svg {
+    height: 18px;
+    width: 18px;
+}
+
+@media (min-width: 1025px) {
+    body:not(.login):not(.popup) #main,
+    body:not(.login):not(.popup) #main.shifted {
+        margin-left: 18rem;
+    }
+
+    body:not(.login):not(.popup) #main:not(.shifted) {
+        margin-left: 76px;
+    }
+
+    html body #main #nav-sidebar.reference-sidebar,
+    html body #main.shifted #nav-sidebar.reference-sidebar {
+        width: 18rem !important;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar {
+        box-sizing: border-box;
+        flex-basis: 76px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        width: 76px !important;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-brand > span:last-child,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-workspace h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-admin h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-admin .reference-sidebar-search,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-apps,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-link > span:last-child,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-logout button > span:last-child {
+        display: none !important;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-header,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-workspace,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-logout {
+        align-items: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-link,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-logout button {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+        width: 44px;
+    }
+
+    body:not(.login):not(.popup) #header,
+    body:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"],
+    body:not(.login):not(.popup) #footer {
+        margin-left: 18rem;
+        transition: margin-left 180ms ease;
+    }
+
+    body.admin-sidebar-collapsed:not(.login):not(.popup) #header,
+    body.admin-sidebar-collapsed:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"],
+    body.admin-sidebar-collapsed:not(.login):not(.popup) #footer {
+        margin-left: 76px;
+    }
+
+    #toggle-nav-sidebar.reference-sidebar-toggle {
+        left: calc(18rem - 12px);
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    body.admin-sidebar-collapsed #toggle-nav-sidebar.reference-sidebar-toggle {
+        left: 64px;
+    }
+}
+
+@media (max-width: 1024px) {
+    html body #main #nav-sidebar.reference-sidebar,
+    html body #main.shifted #nav-sidebar.reference-sidebar,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar {
+        box-sizing: border-box;
+        border-radius: 0 16px 16px 0 !important;
+        flex-basis: min(18rem, calc(100vw - 56px)) !important;
+        padding: 22px 14px 16px !important;
+        width: min(18rem, calc(100vw - 56px)) !important;
+    }
+
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-brand > span:last-child,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-workspace h2,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-admin h2,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-admin .reference-sidebar-search,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-apps,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-link > span:last-child,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-logout button > span:last-child {
+        display: revert !important;
+    }
+
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-workspace h2,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-admin h2,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-apps {
+        display: block !important;
+    }
+
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-link,
+    html body #main #nav-sidebar.reference-sidebar .reference-sidebar-logout button {
+        justify-content: flex-start;
+        padding-left: 10px;
+        padding-right: 10px;
+        width: 100%;
+    }
+
+    body:not(.login):not(.popup) #main #nav-sidebar.reference-sidebar {
+        transform: translateX(-110%);
+    }
+
+    body:not(.login):not(.popup) #main.shifted #nav-sidebar.reference-sidebar {
+        transform: translateX(0);
+    }
+
+    #toggle-nav-sidebar.reference-sidebar-toggle,
+    body:not(.admin-sidebar-collapsed) #toggle-nav-sidebar.reference-sidebar-toggle {
+        left: 14px;
+        top: 14px;
+        transform: none;
+    }
+
+    #toggle-nav-sidebar.reference-sidebar-toggle {
+        height: 40px;
+        border: 1px solid var(--admin-border);
+        border-radius: 10px;
+        width: 40px;
+    }
+
+    .reference-sidebar-toggle svg {
+        height: 20px;
+        width: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    body:not(.login):not(.popup) #header {
+        height: auto;
+        margin-left: 0;
+        min-height: 68px;
+        padding: 12px 16px 12px 54px;
+    }
+
+    body:not(.login):not(.popup) #user-tools {
+        margin-left: auto;
+    }
+
+    body:not(.login):not(.popup) #main,
+    body:not(.login):not(.popup) #main.shifted,
+    body:not(.login):not(.popup) #main:not(.shifted) {
+        display: block;
+        margin-left: 0;
+        min-height: calc(100vh - 68px);
+    }
+
+    body:not(.login):not(.popup) #header,
+    body:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"],
+    body:not(.login):not(.popup) #footer {
+        margin-left: 0;
+    }
+
+    body.admin-sidebar-collapsed:not(.login):not(.popup) #header,
+    body.admin-sidebar-collapsed:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"],
+    body.admin-sidebar-collapsed:not(.login):not(.popup) #footer {
+        margin-left: 0;
+    }
+
+    html body #main > #nav-sidebar.reference-sidebar {
+        border: 1px solid var(--admin-border) !important;
+        border-radius: 0 18px 18px 0 !important;
+        box-shadow: 0 16px 40px rgb(0 0 0 / 0.3) !important;
+        display: flex;
+        left: 0;
+        max-height: calc(100vh - 16px) !important;
+        top: 8px;
+        transform: translateX(-110%);
+        transition: transform 180ms ease;
+        visibility: visible;
+        width: min(18rem, calc(100vw - 52px)) !important;
+    }
+
+    #main.shifted > #nav-sidebar.reference-sidebar {
+        transform: translateX(0);
+    }
+
+    #main > #nav-sidebar + .content,
+    #main.shifted > #nav-sidebar + .content {
+        max-width: 100%;
+    }
+
+    body:not(.login):not(.popup) #main > .content > #content {
+        padding: 22px 16px;
+    }
+
+    body:not(.login):not(.popup) > #container > nav[aria-label="Breadcrumbs"],
+    body:not(.login):not(.popup) #footer {
+        margin-left: 0;
+    }
+
+    #toggle-nav-sidebar.reference-sidebar-toggle {
+        display: inline-flex;
+        height: 38px;
+        left: 12px !important;
+        position: fixed;
+        top: 14px;
+        transform: none;
+        width: 38px;
+        z-index: 40;
+    }
+
+    .admin-user-tools {
+        flex-wrap: wrap;
+        gap: 8px 12px;
+        justify-content: flex-end;
+    }
+
+    .admin-user-tools > span {
+        flex-basis: 100%;
+        text-align: right;
+    }
+
+    .admin-quick-links {
+        margin-left: 0;
+    }
+
+    .admin-theme-toggle {
+        min-height: 38px;
+    }
+
+    #content h1,
+    #content .dashboard-welcome h1 {
+        font-size: clamp(1.4rem, 6vw, 1.8rem) !important;
+        overflow-wrap: anywhere;
+    }
+
+    .dashboard-welcome {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .dashboard-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-grid-main,
+    .dashboard-grid-bottom {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dashboard-panel,
+    .dashboard-kpi {
+        min-width: 0;
+        padding: 16px;
+    }
+
+    .aligned .form-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .aligned .form-row label {
+        float: none;
+        padding: 0;
+        text-align: left;
+        width: auto;
+    }
+
+    .aligned .form-row > div,
+    .aligned .form-row .fieldBox {
+        box-sizing: border-box;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .aligned .form-row input:not([type="checkbox"]):not([type="radio"]),
+    .aligned .form-row select,
+    .aligned .form-row textarea,
+    .aligned .form-row .related-widget-wrapper {
+        box-sizing: border-box;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .submit-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .submit-row input,
+    .submit-row .deletelink {
+        box-sizing: border-box;
+        margin: 0;
+        text-align: center;
+        width: 100%;
+    }
+
+    .paginator {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .admin-toast-region {
+        right: 12px;
+        top: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    body:not(.login):not(.popup) #main > .content > #content {
+        padding: 18px 12px;
+    }
+
+    .dashboard-kpis {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .admin-user-tools > span {
+        display: none;
+    }
+
+    .admin-user-tools {
+        font-size: 12px;
+    }
+
+    .admin-toast-region {
+        max-width: calc(100vw - 24px);
+        right: 8px;
+        top: 8px;
+    }
+
+    .admin-toast {
+        padding: 12px;
+    }
+
+    .actions select,
+    .actions .button,
+    #changelist-search input {
+        max-width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-toast,
+    #main {
+        transition: none;
+    }
+}
+
+html[data-theme="dark"] #content h1,
+html[data-theme="dark"] #content h2,
+html[data-theme="dark"] #content h3,
+html[data-theme="dark"] .dashboard-welcome h1,
+html[data-theme="dark"] .dashboard-kpi strong {
+    color: var(--admin-text-primary) !important;
+}
+
+/* Consistent theme-aware styling for Django's add, change, and inline forms. */
+#content-main > form,
+#content-main .module,
+.inline-group,
+.submit-row {
+    border-color: var(--admin-border);
+}
+
+.change-form #content-main > form {
+    display: grid;
+    gap: 18px;
+}
+
+.change-form #content-main .module,
+.change-form .inline-group {
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+    overflow: hidden;
+}
+
+.change-form #content-main .module h2,
+.change-form .inline-group h2,
+.change-form .inline-group h3 {
+    background: var(--admin-bg-tertiary);
+    border-bottom: 1px solid var(--admin-border);
+    color: var(--admin-text-primary);
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 14px 18px;
+}
+
+.change-form .form-row,
+.change-form .aligned .form-row {
+    border-bottom: 1px solid color-mix(in srgb, var(--admin-border) 65%, transparent);
+    display: grid;
+    gap: 8px;
+    grid-template-columns: minmax(150px, 0.32fr) minmax(0, 1fr);
+    padding: 16px 18px;
+}
+
+.change-form .form-row:last-child {
+    border-bottom: 0;
+}
+
+.change-form .aligned .form-row > label,
+.change-form .aligned .form-row .fieldBox,
+.change-form .form-row > div,
+.change-form .form-row .fieldBox,
+.change-form .form-row .flex-container {
+    float: none;
+    margin: 0;
+    max-width: none;
+    width: 100%;
+}
+
+.change-form .aligned .form-row > label,
+.change-form .form-row > label {
+    color: var(--admin-text-secondary);
+    font-size: 0.84rem;
+    font-weight: 650;
+    line-height: 1.5;
+    padding: 8px 0 0;
+    text-align: left;
+    width: auto;
+}
+
+.change-form .form-row input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+.change-form .form-row select,
+.change-form .form-row textarea,
+.change-form .form-row .vTextField,
+.change-form .form-row .vDateField,
+.change-form .form-row .vTimeField,
+.change-form .form-row .related-widget-wrapper select,
+.change-form .form-row .related-widget-wrapper input,
+.change-form .form-row .selector select,
+.change-form .form-row .select2-container .select2-selection {
+    background-color: var(--admin-bg-primary);
+    border: 1px solid var(--admin-border);
+    border-radius: 9px;
+    box-sizing: border-box;
+    color: var(--admin-text-primary);
+    font: inherit;
+    min-height: 42px;
+    max-width: 100%;
+    padding: 10px 12px;
+    width: 100%;
+}
+
+.change-form .form-row textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.change-form .form-row input::placeholder,
+.change-form .form-row textarea::placeholder {
+    color: var(--admin-text-tertiary);
+    opacity: 1;
+}
+
+.change-form .form-row input:focus,
+.change-form .form-row select:focus,
+.change-form .form-row textarea:focus,
+.change-form .form-row .select2-container--focus .select2-selection,
+.change-form .form-row .select2-container--open .select2-selection {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
+    outline: 0;
+}
+
+.change-form .form-row input[type="checkbox"],
+.change-form .form-row input[type="radio"],
+.inline-group input[type="checkbox"],
+.inline-group input[type="radio"] {
+    accent-color: var(--admin-primary);
+    height: 17px;
+    width: 17px;
+}
+
+.change-form .form-row .checkbox-row,
+.change-form .form-row label:has(input[type="checkbox"]),
+.change-form .form-row label:has(input[type="radio"]) {
+    align-items: center;
+    color: var(--admin-text-secondary);
+    display: flex;
+    gap: 9px;
+}
+
+.change-form .form-row .help,
+.change-form .form-row p.help,
+.change-form .form-row .help li,
+.change-form .form-row .timezonewarning,
+.change-form .form-row .datetimeshortcuts {
+    color: var(--admin-text-tertiary);
+    font-size: 0.78rem;
+    line-height: 1.55;
+}
+
+.change-form .form-row .help,
+.change-form .form-row p.help {
+    grid-column: 2;
+    margin: 0;
+}
+
+.change-form .form-row .errorlist,
+.change-form .form-row .errors,
+.change-form .form-row .errornote {
+    color: var(--admin-error);
+    font-size: 0.82rem;
+    grid-column: 2;
+    margin: 0;
+}
+
+.change-form .form-row.errors,
+.change-form .form-row ul.errorlist + input,
+.change-form .form-row ul.errorlist + select,
+.change-form .form-row ul.errorlist + textarea {
+    border-color: var(--admin-error);
+}
+
+.change-form .form-row .related-widget-wrapper {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    min-width: 0;
+}
+
+.change-form .form-row .related-widget-wrapper select,
+.change-form .form-row .related-widget-wrapper input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.change-form .form-row .related-widget-wrapper-link,
+.change-form .form-row .related-widget-wrapper a {
+    align-items: center;
+    background: var(--admin-bg-tertiary);
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    display: inline-flex;
+    flex: 0 0 38px;
+    height: 38px;
+    justify-content: center;
+}
+
+.change-form .form-row .related-widget-wrapper-link img,
+.change-form .form-row .related-widget-wrapper a img {
+    height: 16px;
+    width: 16px;
+}
+
+.change-form .submit-row {
+    align-items: center;
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 14px 16px;
+}
+
+.change-form .submit-row input,
+.change-form .submit-row .deletelink,
+.change-form .submit-row a {
+    border-radius: 9px;
+    font-size: 0.85rem;
+    font-weight: 650;
+    margin: 0;
+    min-height: 42px;
+    padding: 10px 16px;
+}
+
+.change-form .submit-row .deletelink {
+    background: var(--admin-error);
+    color: #fff !important;
+    margin-right: auto;
+}
+
+.change-form .submit-row .deletelink:hover {
+    background: #f87171;
+}
+
+.change-form .inline-group .tabular {
+    overflow-x: auto;
+}
+
+.change-form .inline-group table {
+    min-width: 680px;
+}
+
+.change-form .inline-group thead th {
+    background: var(--admin-bg-tertiary);
+    color: var(--admin-text-tertiary);
+    font-size: 0.7rem;
+    font-weight: 750;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.change-form .inline-group th,
+.change-form .inline-group td {
+    border-color: var(--admin-border);
+    color: var(--admin-text-secondary);
+    padding: 11px 12px;
+    vertical-align: middle;
+}
+
+.change-form .inline-group tr.form-row {
+    display: table-row;
+}
+
+.change-form .inline-group tr.form-row input:not([type="checkbox"]):not([type="radio"]),
+.change-form .inline-group tr.form-row select,
+.change-form .inline-group tr.form-row textarea {
+    min-width: 110px;
+    width: 100%;
+}
+
+.change-form .inline-group .add-row,
+.change-form .inline-group .inline-deletelink {
+    color: var(--admin-primary-hover);
+    font-weight: 650;
+}
+
+.admin-transaction-workflow .admin-workflow-search input:not([type="submit"]),
+.admin-transaction-workflow .admin-workflow-fields input:not([type="checkbox"]):not([type="radio"]),
+.admin-transaction-workflow .admin-workflow-fields select,
+.admin-transaction-workflow .admin-workflow-fields textarea,
+.admin-transaction-workflow .admin-workflow-table-wrap input:not([type="checkbox"]):not([type="radio"]) {
+    background: var(--admin-bg-primary);
+    border: 1px solid var(--admin-border);
+    border-radius: 9px;
+    color: var(--admin-text-primary);
+    min-height: 42px;
+    padding: 10px 12px;
+}
+
+.admin-transaction-workflow .admin-workflow-search input:focus,
+.admin-transaction-workflow .admin-workflow-fields input:focus,
+.admin-transaction-workflow .admin-workflow-fields select:focus,
+.admin-transaction-workflow .admin-workflow-fields textarea:focus,
+.admin-transaction-workflow .admin-workflow-table-wrap input:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.2);
+    outline: 0;
+}
+
+@media (max-width: 767px) {
+    .change-form .form-row,
+    .change-form .aligned .form-row {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 14px;
+    }
+
+    .change-form .aligned .form-row > label,
+    .change-form .form-row > label {
+        padding-top: 0;
+    }
+
+    .change-form .form-row .help,
+    .change-form .form-row p.help,
+    .change-form .form-row .errorlist,
+    .change-form .form-row .errors,
+    .change-form .form-row .errornote {
+        grid-column: 1;
+    }
+
+    .change-form .submit-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .change-form .submit-row input,
+    .change-form .submit-row .deletelink,
+    .change-form .submit-row a {
+        box-sizing: border-box;
+        text-align: center;
+        width: 100%;
+    }
+}
+
+html[data-theme="dark"] .dashboard-kpi,
+html[data-theme="dark"] .dashboard-panel {
+    background: var(--admin-bg-secondary);
+    border-color: var(--admin-border);
+    box-shadow: var(--tw-shadow);
+}
+
+html[data-theme="dark"] .dashboard-kpi span,
+html[data-theme="dark"] .dashboard-subtitle,
+html[data-theme="dark"] .dashboard-kpi small,
+html[data-theme="dark"] .panel-heading p,
+html[data-theme="dark"] .quick-action small,
+html[data-theme="dark"] .stock-book small,
+html[data-theme="dark"] .sale-book small,
+html[data-theme="dark"] .activity-row small,
+html[data-theme="dark"] .dashboard-empty {
+    color: var(--admin-text-tertiary);
+}
+
+html[data-theme="dark"] .dashboard-primary-action,
+html[data-theme="dark"] .button,
+html[data-theme="dark"] input[type="submit"],
+html[data-theme="dark"] input[type="button"],
+html[data-theme="dark"] .submit-row input,
+html[data-theme="dark"] a.button {
+    background: var(--admin-primary-active);
+    color: #FFFFFF !important;
+}
+
+html[data-theme="dark"] .dashboard-primary-action:hover,
+html[data-theme="dark"] .button:hover,
+html[data-theme="dark"] input[type="submit"]:hover,
+html[data-theme="dark"] input[type="button"]:hover,
+html[data-theme="dark"] .submit-row input:hover,
+html[data-theme="dark"] a.button:hover {
+    background: var(--admin-primary-hover);
+    color: #0B0F14 !important;
+}
+
+html[data-theme="dark"] .dashboard-eyebrow,
+html[data-theme="dark"] .panel-heading a,
+html[data-theme="dark"] a:link,
+html[data-theme="dark"] a:visited {
+    color: var(--admin-primary-hover);
+}
+
+html[data-theme="dark"] #result_list tbody tr:hover {
+    background: rgba(59, 130, 246, 0.16);
+    box-shadow: inset 3px 0 0 var(--admin-primary);
+}
+
+html[data-theme="light"] #content h1,
+html[data-theme="light"] #content h2,
+html[data-theme="light"] #content h3,
+html[data-theme="light"] .dashboard-welcome h1,
+html[data-theme="light"] .dashboard-kpi strong {
+    color: var(--admin-text-primary) !important;
+}
+
+html[data-theme="light"] .dashboard-kpi,
+html[data-theme="light"] .dashboard-panel {
+    background: var(--admin-bg-secondary);
+    border-color: var(--admin-border);
+    box-shadow: var(--tw-shadow);
+}
+
+html[data-theme="light"] .dashboard-primary-action,
+html[data-theme="light"] .button,
+html[data-theme="light"] input[type="submit"],
+html[data-theme="light"] input[type="button"],
+html[data-theme="light"] .submit-row input,
+html[data-theme="light"] a.button {
+    background: var(--admin-primary-active);
+    color: #FFFFFF !important;
+}
+
+html[data-theme="light"] .dashboard-primary-action:hover,
+html[data-theme="light"] .button:hover,
+html[data-theme="light"] input[type="submit"]:hover,
+html[data-theme="light"] input[type="button"]:hover,
+html[data-theme="light"] .submit-row input:hover,
+html[data-theme="light"] a.button:hover {
+    background: var(--admin-primary-hover);
+    color: #0F172A !important;
+}
+
+@media (max-width: 1024px) {
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar {
+        flex: 0 0 min(18rem, calc(100vw - 68px)) !important;
+        width: min(18rem, calc(100vw - 68px)) !important;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-brand > span:last-child,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-workspace h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-admin h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-admin .reference-sidebar-search,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-apps,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-link > span:last-child,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-logout button > span:last-child {
+        display: revert !important;
+    }
+
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-workspace h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-admin h2,
+    html body #main:not(.shifted) #nav-sidebar.reference-sidebar .reference-sidebar-apps {
+        display: block !important;
+    }
+}
+
+body.login #container {
+    box-sizing: border-box;
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-radius: 18px;
+    box-shadow: 0 20px 55px rgb(0 0 0 / 0.24);
+    display: block;
+    float: none;
+    margin: clamp(24px, 8vh, 72px) auto 0;
+    max-width: 520px;
+    overflow: hidden;
+    width: 100%;
+}
+
+body.login #header {
+    align-items: center;
+    background: var(--admin-bg-secondary);
+    border-bottom: 1px solid var(--admin-border);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    min-height: 100px;
+    padding: 24px;
+}
+
+body.login #branding {
+    margin: 0;
+}
+
+body.login .admin-brand {
+    gap: 12px;
+}
+
+body.login .admin-brand-mark {
+    border-radius: 12px;
+    height: 44px;
+    width: 44px;
+}
+
+body.login .admin-brand strong {
+    font-size: 19px;
+}
+
+body.login .admin-brand small {
+    font-size: 12px;
+}
+
+body.login #main,
+body.login #content,
+body.login #content-main {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+}
+
+body.login #content {
+    padding: 28px 30px 30px;
+}
+
+body.login #login-form .form-row {
+    border: 0;
+    margin: 0 0 20px;
+    padding: 0;
+}
+
+body.login #login-form label {
+    color: var(--admin-text-secondary);
+    display: block;
+    float: none;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    padding: 0;
+    text-align: left;
+    width: auto;
+}
+
+body.login #login-form input[type="text"],
+body.login #login-form input[type="password"] {
+    background: var(--admin-bg-primary);
+    border: 1px solid var(--admin-border);
+    border-radius: 9px;
+    box-sizing: border-box;
+    color: var(--admin-text-primary);
+    font-size: 15px;
+    min-height: 46px;
+    padding: 11px 13px;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+    width: 100%;
+}
+
+body.login #login-form input[type="text"]:focus,
+body.login #login-form input[type="password"]:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.18);
+    outline: 0;
+}
+
+body.login #login-form .submit-row input[type="submit"] {
+    background: var(--admin-primary-active);
+    border: 1px solid var(--admin-primary-active);
+    border-radius: 9px;
+    box-shadow: 0 4px 10px rgb(37 99 235 / 0.2);
+    color: #FFFFFF;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    min-height: 48px;
+    padding: 10px 18px;
+    text-shadow: none;
+    text-transform: none;
+    transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+    width: 100%;
+}
+
+body.login #login-form .submit-row {
+    align-items: stretch;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    display: flex;
+    justify-content: stretch;
+    margin: 8px 0 0;
+    padding: 0;
+}
+
+body.login #login-form .submit-row input[type="submit"]:hover {
+    background: var(--admin-primary-hover);
+    border-color: var(--admin-primary-hover);
+    box-shadow: 0 6px 14px rgb(37 99 235 / 0.24);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+}
+
+body.login #login-form .submit-row input[type="submit"]:active {
+    background: var(--admin-primary-active);
+    box-shadow: 0 2px 5px rgb(37 99 235 / 0.2);
+    transform: translateY(0);
+}
+
+body.login #login-form .submit-row input[type="submit"]:focus-visible {
+    outline: 3px solid rgb(96 165 250 / 0.55);
+    outline-offset: 3px;
+}
+
+body.login #footer {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px 24px;
+    text-align: center;
+    width: 100%;
+}
+
+body.change-form.app-sales #content > h1,
+body.change-form.app-purchase #content > h1,
+body.change-form.app-books #content > h1 {
+    font-size: clamp(1.5rem, 2.5vw, 1.9rem);
+    letter-spacing: -0.025em;
+    margin: 0 0 22px;
+}
+
+body.change-form.app-sales #content-main > form,
+body.change-form.app-purchase #content-main > form,
+body.change-form.app-books.model-stock #content-main > form {
+    display: grid;
+    gap: 20px;
+}
+
+body.change-form.app-sales #content-main fieldset.module,
+body.change-form.app-purchase #content-main fieldset.module,
+body.change-form.app-books.model-stock #content-main fieldset.module,
+body.change-form.app-sales #content-main .inline-group,
+body.change-form.app-purchase #content-main .inline-group {
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+    margin: 0;
+    overflow: hidden;
+}
+
+body.change-form.app-sales #content-main fieldset.module h2,
+body.change-form.app-purchase #content-main fieldset.module h2,
+body.change-form.app-books.model-stock #content-main fieldset.module h2,
+body.change-form.app-sales #content-main .inline-group h2,
+body.change-form.app-purchase #content-main .inline-group h2 {
+    background: transparent;
+    border-bottom: 1px solid var(--admin-border);
+    color: var(--admin-text-primary);
+    font-size: 15px;
+    font-weight: 700;
+    padding: 16px 20px;
+}
+
+body.change-form.app-sales #content-main fieldset.module .form-row,
+body.change-form.app-purchase #content-main fieldset.module .form-row,
+body.change-form.app-books.model-stock #content-main fieldset.module .form-row {
+    border-bottom: 1px solid var(--admin-border);
+    padding: 16px 20px;
+}
+
+body.change-form.app-sales #content-main fieldset.module .form-row:last-child,
+body.change-form.app-purchase #content-main fieldset.module .form-row:last-child,
+body.change-form.app-books.model-stock #content-main fieldset.module .form-row:last-child {
+    border-bottom: 0;
+}
+
+body.change-form.app-sales #content-main fieldset.module label,
+body.change-form.app-purchase #content-main fieldset.module label,
+body.change-form.app-books.model-stock #content-main fieldset.module label,
+body.change-form.app-sales #content-main .inline-group label,
+body.change-form.app-purchase #content-main .inline-group label {
+    color: var(--admin-text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+body.change-form.app-sales #content-main input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
+body.change-form.app-sales #content-main select,
+body.change-form.app-sales #content-main textarea,
+body.change-form.app-purchase #content-main input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
+body.change-form.app-purchase #content-main select,
+body.change-form.app-purchase #content-main textarea,
+body.change-form.app-books.model-stock #content-main input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]),
+body.change-form.app-books.model-stock #content-main select,
+body.change-form.app-books.model-stock #content-main textarea {
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    min-height: 40px;
+    padding: 9px 11px;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+body.change-form.app-sales #content-main input:focus,
+body.change-form.app-sales #content-main select:focus,
+body.change-form.app-sales #content-main textarea:focus,
+body.change-form.app-purchase #content-main input:focus,
+body.change-form.app-purchase #content-main select:focus,
+body.change-form.app-purchase #content-main textarea:focus,
+body.change-form.app-books.model-stock #content-main input:focus,
+body.change-form.app-books.model-stock #content-main select:focus,
+body.change-form.app-books.model-stock #content-main textarea:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.16);
+    outline: 0;
+}
+
+body.change-form.app-sales #content-main .inline-group .tabular,
+body.change-form.app-purchase #content-main .inline-group .tabular {
+    overflow-x: auto;
+}
+
+body.change-form.app-sales #content-main .inline-group .tabular table,
+body.change-form.app-purchase #content-main .inline-group .tabular table {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 700px;
+    width: 100%;
+}
+
+body.change-form.app-sales #content-main .inline-group .tabular thead th,
+body.change-form.app-purchase #content-main .inline-group .tabular thead th {
+    background: var(--admin-bg-tertiary);
+    color: var(--admin-text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 12px;
+    text-transform: uppercase;
+}
+
+body.change-form.app-sales #content-main .inline-group .tabular td,
+body.change-form.app-purchase #content-main .inline-group .tabular td {
+    padding: 10px 12px;
+    vertical-align: middle;
+}
+
+body.change-form.app-sales #content-main .inline-group .tabular tbody tr:hover,
+body.change-form.app-purchase #content-main .inline-group .tabular tbody tr:hover {
+    background: rgb(59 130 246 / 0.06);
+}
+
+body.change-form.app-sales #content-main .inline-group .tabular input:not([type="checkbox"]),
+body.change-form.app-sales #content-main .inline-group .tabular select,
+body.change-form.app-purchase #content-main .inline-group .tabular input:not([type="checkbox"]),
+body.change-form.app-purchase #content-main .inline-group .tabular select {
+    min-width: 90px;
+    width: 100%;
+}
+
+body.change-form.app-sales #content-main .inline-group .tabular .related-widget-wrapper,
+body.change-form.app-purchase #content-main .inline-group .tabular .related-widget-wrapper {
+    min-width: 210px;
+    width: 100%;
+}
+
+body.change-form.app-sales #content-main .inline-group .tabular tr.add-row a,
+body.change-form.app-purchase #content-main .inline-group .tabular tr.add-row a {
+    color: var(--admin-primary-hover);
+    font-weight: 650;
+}
+
+body.change-form.app-sales #content-main .submit-row,
+body.change-form.app-purchase #content-main .submit-row,
+body.change-form.app-books.model-stock #content-main .submit-row {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+}
+
+body.change-form.app-sales #content-main .submit-row input,
+body.change-form.app-purchase #content-main .submit-row input,
+body.change-form.app-books.model-stock #content-main .submit-row input {
+    border-radius: 8px;
+    font-weight: 650;
+    min-height: 42px;
+    padding: 9px 16px;
+}
+
+.admin-transaction-workflow {
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.1);
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 1040px;
+    overflow: hidden;
+    padding: clamp(20px, 3vw, 32px);
+    width: 100%;
+}
+
+.admin-transaction-workflow > h1 {
+    color: var(--admin-text-primary);
+    font-size: clamp(1.5rem, 2.5vw, 1.9rem);
+    letter-spacing: -0.025em;
+    margin: 0 0 8px;
+}
+
+.admin-workflow-intro {
+    color: var(--admin-text-tertiary);
+    line-height: 1.55;
+    margin: 0 0 24px;
+}
+
+.admin-workflow-search {
+    align-items: end;
+    background: var(--admin-bg-primary);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 24px;
+    padding: 16px;
+}
+
+.admin-workflow-search label,
+.admin-workflow-fields label {
+    color: var(--admin-text-secondary);
+    display: grid;
+    flex: 1 1 180px;
+    font-size: 13px;
+    font-weight: 650;
+    gap: 7px;
+    min-width: 0;
+}
+
+.admin-workflow-search input:not([type="submit"]),
+.admin-workflow-fields input,
+.admin-workflow-fields textarea,
+.admin-workflow-form table input[type="number"] {
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: var(--admin-text-primary);
+    min-height: 40px;
+    padding: 9px 11px;
+    width: 100%;
+}
+
+.admin-workflow-search input:focus,
+.admin-workflow-fields input:focus,
+.admin-workflow-fields textarea:focus,
+.admin-workflow-form table input:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.16);
+    outline: 0;
+}
+
+.admin-workflow-search input[type="submit"],
+.admin-workflow-search .button {
+    border-radius: 8px;
+    font-weight: 650;
+    min-height: 40px;
+    padding: 9px 16px;
+}
+
+.admin-workflow-summary {
+    background: rgb(59 130 246 / 0.08);
+    border: 1px solid rgb(59 130 246 / 0.2);
+    border-radius: 12px;
+    margin: 0 0 18px;
+    padding: 16px 18px;
+}
+
+.admin-workflow-summary h2 {
+    color: var(--admin-text-primary);
+    font-size: 16px;
+    margin: 0 0 6px;
+}
+
+.admin-workflow-summary p {
+    color: var(--admin-text-tertiary);
+    margin: 0;
+}
+
+.admin-workflow-summary strong {
+    color: var(--admin-text-secondary);
+    font-weight: 650;
+}
+
+.admin-workflow-summary-divider {
+    color: var(--admin-text-tertiary);
+    margin: 0 10px;
+}
+
+.admin-workflow-table-wrap {
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    margin: 0 0 22px;
+    overflow-x: auto;
+}
+
+.admin-workflow-table-wrap table {
+    border-collapse: collapse;
+    min-width: 620px;
+    width: 100%;
+}
+
+.admin-workflow-table-wrap th {
+    background: var(--admin-bg-tertiary);
+    color: var(--admin-text-secondary);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 12px 14px;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.admin-workflow-table-wrap td {
+    border-top: 1px solid var(--admin-border);
+    color: var(--admin-text-secondary);
+    padding: 12px 14px;
+    vertical-align: middle;
+}
+
+.admin-workflow-table-wrap tbody tr:hover {
+    background: rgb(59 130 246 / 0.06);
+}
+
+.admin-workflow-table-wrap input[type="checkbox"] {
+    accent-color: var(--admin-primary);
+    height: 16px;
+    width: 16px;
+}
+
+.admin-workflow-form {
+    display: grid;
+    gap: 18px;
+}
+
+.admin-workflow-fields {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-workflow-fields .admin-workflow-field-wide {
+    grid-column: 1 / -1;
+}
+
+.admin-workflow-fields textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.admin-workflow-form .admin-workflow-table-wrap {
+    margin-bottom: 0;
+}
+
+.admin-workflow-actions,
+.admin-stock-receive .submit-row {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+}
+
+.admin-workflow-actions .button,
+.admin-stock-receive .submit-row input,
+.admin-stock-receive .submit-row a {
+    align-items: center;
+    border-radius: 8px;
+    display: inline-flex;
+    font-weight: 650;
+    justify-content: center;
+    min-height: 42px;
+    padding: 9px 16px;
+}
+
+.admin-stock-receive .submit-row a {
+    background: var(--admin-bg-tertiary);
+    border: 1px solid var(--admin-border);
+    color: var(--admin-text-secondary);
+    text-decoration: none;
+}
+
+.admin-stock-receive .submit-row a:hover {
+    border-color: var(--admin-primary);
+    color: var(--admin-primary-hover);
+}
+
+.admin-stock-remove #remove-stock-form {
+    display: grid;
+    gap: 20px;
+    max-width: 560px;
+}
+
+.admin-stock-remove .admin-workflow-fields {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 640px) {
+    .admin-transaction-workflow {
+        border-radius: 12px;
+        padding: 18px 14px;
+    }
+
+    .admin-workflow-search {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-workflow-fields {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .admin-workflow-fields .admin-workflow-field-wide {
+        grid-column: auto;
+    }
+
+    .admin-workflow-actions,
+    .admin-stock-receive .submit-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-workflow-actions > *,
+    .admin-stock-receive .submit-row > * {
+        box-sizing: border-box;
+        width: 100%;
+    }
+}

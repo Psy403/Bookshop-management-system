@@ -1,0 +1,59 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/admin-return.css' %}">
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="module admin-transaction-workflow admin-return-workflow">
+  <h1>Record Return</h1>
+  <p class="admin-workflow-intro">Find the original sale, select returned items, and review the refund details.</p>
+  <form method="get" class="return-search-form admin-workflow-search">
+    <label for="bill_id">Bill ID</label>
+    <input id="bill_id" name="bill_id" value="{{ bill_id }}" type="number" min="1" required>
+    <button type="submit" class="button">Find Bill</button>
+  </form>
+
+  {% if sale %}
+  <form method="post" class="admin-workflow-form">
+    {% csrf_token %}
+    <input type="hidden" name="bill_id" value="{{ sale.id }}">
+    <div class="admin-workflow-summary">
+      <h2>Bill #{{ sale.id }}</h2>
+      <p>Sale date <strong>{{ sale.sale_at|date:"M d, Y h:i A" }}</strong></p>
+    </div>
+    <div class="admin-workflow-table-wrap">
+    <table class="admin-workflow-table">
+      <thead><tr><th>Return</th><th>Book</th><th>Purchased</th><th>Remaining</th><th>Quantity</th></tr></thead>
+      <tbody>
+      {% for item in return_items %}
+      <tr>
+        <td><input type="checkbox" name="return_item" value="{{ item.id }}"></td>
+        <td>{{ item.book.title }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.remaining_quantity }}</td>
+        <td><input type="number" name="quantity_{{ item.id }}" value="1" min="1" max="{{ item.remaining_quantity }}"></td>
+      </tr>
+      {% empty %}<tr><td colspan="5">No items remain available for return.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% if return_items %}
+    <div class="admin-workflow-fields">
+      <label>Return date <input type="date" name="return_date" value="{{ sale.sale_at|date:'Y-m-d' }}" min="{{ sale.sale_at|date:'Y-m-d' }}" max="{{ sale.sale_at|date:'Y-m-d' }}" required></label>
+      <label>Return type <input name="return_type" required></label>
+      <label>Return status <input name="return_status" value="Completed" required></label>
+      <label class="admin-workflow-field-wide">Reason<textarea name="reason" required rows="3"></textarea></label>
+    </div>
+    <div class="admin-workflow-actions">
+      <button class="button default" name="submit_return" value="1">Record Return and Generate Bill</button>
+    </div>
+    {% endif %}
+  </form>
+  {% elif bill_id %}
+  <p class="errornote">No bill was found for ID {{ bill_id }}.</p>
+  {% endif %}
+</div>
+{% endblock %}

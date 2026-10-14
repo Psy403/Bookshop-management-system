@@ -1,0 +1,50 @@
+{% load i18n %}
+<button class="sticky toggle-nav-sidebar reference-sidebar-toggle" id="toggle-nav-sidebar" type="button" aria-label="{% translate 'Toggle navigation' %}" aria-controls="nav-sidebar">
+  
+</button>
+<nav class="sticky reference-sidebar" id="nav-sidebar" aria-label="{% translate 'Sidebar' %}">
+  <div class="reference-sidebar-header">
+    <a class="reference-sidebar-brand" href="{% url 'admin:index' %}" aria-label="Bookshop management workspace">
+      <span class="admin-brand-mark" aria-hidden="true">B</span>
+      <span><strong>Bookshop</strong><small>Management workspace</small></span>
+    </a>
+  </div>
+  <section class="reference-sidebar-workspace" aria-labelledby="workspace-navigation-title">
+    <h2 id="workspace-navigation-title">{% translate "Workspace" %}</h2>
+    <a class="reference-sidebar-link{% if request.resolver_match.url_name == 'index' %} is-active{% endif %}" href="{% url 'admin:index' %}" aria-label="Dashboard" title="Dashboard"{% if request.resolver_match.url_name == 'index' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"></rect><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"></rect><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"></rect></svg><span>Dashboard</span>
+    </a>
+    <a class="reference-sidebar-link{% if request.resolver_match.url_name == 'sales_sale_changelist' or request.resolver_match.url_name == 'sales_saleitem_changelist' %} is-active{% endif %}" href="{% url 'admin:sales_sale_changelist' %}" aria-label="Sales" title="Sales"{% if request.resolver_match.url_name == 'sales_sale_changelist' or request.resolver_match.url_name == 'sales_saleitem_changelist' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16"></path><rect x="5" y="11" width="3.5" height="6.5" rx="1"></rect><rect x="10.25" y="7.5" width="3.5" height="10" rx="1"></rect><rect x="15.5" y="4.5" width="3.5" height="13" rx="1"></rect></svg><span>Sales</span>
+    </a>
+    <a class="reference-sidebar-link{% if request.resolver_match.url_name == 'books_stock_changelist' %} is-active{% endif %}" href="{% url 'admin:books_stock_changelist' %}" aria-label="Stock" title="Stock"{% if request.resolver_match.url_name == 'books_stock_changelist' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"></path><path d="m4.5 7.75 7.5 4.5 7.5-4.5M12 12.25V21"></path><path d="m8 5.25 8 4.5"></path></svg><span>Stock</span>
+    </a>
+    <a class="reference-sidebar-link{% if request.resolver_match.url_name == 'books_book_category_changelist' %} is-active{% endif %}" href="{% url 'admin:books_book_category_changelist' %}" aria-label="Categories" title="Categories"{% if request.resolver_match.url_name == 'books_book_category_changelist' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6.5h6l2 2h8v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"></path><path d="M4 9.5h16"></path></svg><span>Categories</span>
+    </a>
+    <a class="reference-sidebar-link{% if request.resolver_match.url_name == 'retur_return_changelist' %} is-active{% endif %}" href="{% url 'admin:retur_return_changelist' %}" aria-label="Returns" title="Returns"{% if request.resolver_match.url_name == 'retur_return_changelist' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"></path><path d="M4 9h9a7 7 0 1 1 0 14"></path></svg><span>Returns</span>
+    </a>
+    <a class="reference-sidebar-link{% if request.resolver_match.url_name == 'log_activitylog_changelist' %} is-active{% endif %}" href="{% url 'admin:log_activitylog_changelist' %}" aria-label="Activity logs" title="Activity logs"{% if request.resolver_match.url_name == 'log_activitylog_changelist' %} aria-current="page"{% endif %}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 4.5 12 2.5-6H21"></path></svg><span>Activity logs</span>
+    </a>
+  </section>
+  <section class="reference-sidebar-admin" aria-labelledby="admin-navigation-title">
+    <h2 id="admin-navigation-title">{% translate "Administration" %}</h2>
+    <label class="reference-sidebar-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.5 4.5"></path></svg>
+      <input type="search" id="nav-filter" placeholder="{% translate 'Search admin tools' %}" aria-label="{% translate 'Filter navigation items' %}">
+    </label>
+    <div class="reference-sidebar-apps">
+      {% include 'admin/app_list.html' with app_list=available_apps show_changelinks=False %}
+    </div>
+  </section>
+  <form class="reference-sidebar-logout" method="post" action="{% url 'admin:logout' %}">
+    {% csrf_token %}
+    <button type="submit" aria-label="{% translate 'Log out' %}" title="{% translate 'Log out' %}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"></path><path d="M14 16l4-4-4-4m4 4H9"></path></svg>
+      <span>{% translate "Log out" %}</span>
+    </button>
+  </form>
+</nav>

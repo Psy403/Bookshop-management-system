@@ -32,6 +32,7 @@
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </div>
+            </div>
         </div>
 
         <button type="button" id="add-item" class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50">
@@ -48,24 +49,6 @@
         </div>
     </form>
 </section>
-
-<script>
-    const itemContainer = document.getElementById("sale-items");
-    const addItemButton = document.getElementById("add-item");
-    const firstItem = itemContainer.querySelector(".sale-item");
-
-    addItemButton.addEventListener("click", function () {
-        const newItem = firstItem.cloneNode(true);
-        newItem.querySelector("select").value = "";
-        newItem.querySelector("input").value = "";
-        itemContainer.appendChild(newItem);
-    });
-
-    itemContainer.addEventListener("click", function (event) {
-        const removeButton = event.target.closest(".remove-item");
-        if (removeButton && itemContainer.querySelectorAll(".sale-item").length > 1) {
-            removeButton.closest(".sale-item").remove();
-        }
-    });
-</script>
+{% load static %}
+<script src="{% static 'sales/js/sale-form.js' %}" defer></script>
 {% endblock %}

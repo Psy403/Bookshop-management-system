@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, password_validation
+from django.core.validators import EmailValidator
 
 from .avatar_options import AVATAR_OPTIONS
 from .models import ProfileChangeRequest, User
@@ -38,21 +39,129 @@ class StaffCreationForm(UserCreationForm):
 
 
 class ProfileChangeRequestForm(forms.ModelForm):
-    avatar_choice = forms.ChoiceField(
-        choices=[(option["id"], option["name"]) for option in AVATAR_OPTIONS],
-        widget=forms.RadioSelect,
+    username = forms.CharField(
+        max_length=150,
+        widget=forms.TextInput(attrs={"class": "profile-form-input"}),
     )
-
+    email = forms.CharField(widget=forms.HiddenInput, required=False)
     contact_numbers = forms.CharField(
         required=False,
-        widget=forms.Textarea(attrs={"rows": 3}),
-        help_text="Enter one contact number per line.",
+        widget=forms.HiddenInput,
     )
-    profile_picture = forms.ImageField(required=False)
+    new_password = forms.CharField(
+        required=False,
+        strip=False,
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "profile-form-input",
+                "autocomplete": "new-password",
+                "placeholder": "Enter a new password",
+            },
+            render_value=False,
+        ),
+    )
+    confirm_new_password = forms.CharField(
+        required=False,
+        strip=False,
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "profile-form-input",
+                "autocomplete": "new-password",
+                "placeholder": "Confirm the new password",
+            },
+            render_value=False,
+        ),
+    )
 
     class Meta:
         model = ProfileChangeRequest
-        fields = ("first_name", "middle_name", "last_name", "contact_numbers", "email", "avatar_choice")
+        fields = (
+            "username",
+            "first_name",
+            "middle_name",
+            "last_name",
+            "email",
+            "contact_numbers",
+        )
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+        for field_name in ("username", "first_name", "middle_name", "last_name"):
+            self.fields[field_name].widget.attrs["class"] = "profile-form-input"
+
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        queryset = User.objects.filter(username__iexact=username)
+        if self.user:
+            queryset = queryset.exclude(pk=self.user.pk)
+        if queryset.exists():
+            raise forms.ValidationError("This username is already in use.")
+        return username
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password = cleaned_data.get("new_password")
+        confirm_new_password = cleaned_data.get("confirm_new_password")
+
+        if new_password or confirm_new_password:
+            if new_password != confirm_new_password:
+                self.add_error("confirm_new_password", "The passwords do not match.")
+            elif new_password:
+                try:
+                    password_validation.validate_password(new_password, self.user)
+                except forms.ValidationError as error:
+                    self.add_error("new_password", error)
+        return cleaned_data
+
+    def clean_email(self):
+        addresses = [
+            address.strip()
+            for address in self.cleaned_data["email"].splitlines()
+            if address.strip()
+        ]
+        validate_email = EmailValidator()
+        for address in addresses:
+            if not address.lower().endswith("@gmail.com"):
+                raise forms.ValidationError("Not valid email address.")
+            try:
+                validate_email(address)
+            except forms.ValidationError as error:
+                raise forms.ValidationError("Not valid email address.") from error
+        return "\n".join(addresses)
+
+    def clean_contact_numbers(self):
+        numbers = [
+            number.strip()
+            for number in self.cleaned_data["contact_numbers"].splitlines()
+            if number.strip()
+        ]
+        if any(len(number) != 10 or not number.isascii() or not number.isdigit() for number in numbers):
+            raise forms.ValidationError("The contact number should be of 10 digits.")
+        return "\n".join(numbers)
+
+
+class ProfilePictureForm(forms.Form):
+    avatar_choice = forms.ChoiceField(
+        choices=[(option["id"], option["name"]) for option in AVATAR_OPTIONS],
+        required=False,
+        widget=forms.RadioSelect,
+    )
+    profile_picture = forms.ImageField(
+        required=False,
+        widget=forms.ClearableFileInput(
+            attrs={
+                "accept": "image/jpeg,image/png,image/webp",
+                "class": "sr-only",
+            }
+        ),
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.errors and not cleaned_data.get("profile_picture") and not cleaned_data.get("avatar_choice"):
+            raise forms.ValidationError("Choose an avatar or select a profile photo.")
+        return cleaned_data
 
     def clean_profile_picture(self):
         picture = self.cleaned_data.get("profile_picture")

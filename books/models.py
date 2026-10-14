@@ -12,7 +12,6 @@ class Book(models.Model):
     book_category = models.ForeignKey(book_category, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
-    publication_date = models.DateField()
     publication_year = models.PositiveIntegerField(null=True, blank=True)
     isbn = models.CharField(max_length=13, null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -31,9 +30,10 @@ class Book(models.Model):
 
 class stock(models.Model):
     book = models.OneToOneField(Book, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(default=0)
 
     def save(self, *args, **kwargs):
+        request = kwargs.pop("request", None)
         previous_quantity = None
         if self.pk:
             previous_quantity = (
@@ -47,7 +47,12 @@ class stock(models.Model):
         ):
             from log.utils import notify_low_stock
 
-            notify_low_stock(self.book, self.quantity, previous_quantity)
+            notify_low_stock(
+                self.book,
+                self.quantity,
+                previous_quantity,
+                request=request,
+            )
 
     def __str__(self):
         return f"{self.book.title} - {self.quantity} in stock"

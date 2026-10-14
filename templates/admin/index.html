@@ -1,0 +1,68 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="admin-dashboard">
+  <section class="dashboard-welcome">
+    <div>
+      <p class="dashboard-eyebrow">OVERVIEW</p>
+      <h1>Good day, {{ user.get_short_name|default:user.username }}</h1>
+      <p class="dashboard-subtitle">A calm overview of your bookstore.</p>
+    </div>
+    <a class="dashboard-primary-action" href="{% url 'admin:books_book_add' %}">Add a book <span>↗</span></a>
+  </section>
+
+  <section class="dashboard-kpis" aria-label="Business overview">
+    <article class="dashboard-kpi">
+      <div><span>Total books</span><strong>{{ admin_dashboard_stats.books }}</strong><small>Catalogue</small></div>
+    </article>
+    <article class="dashboard-kpi">
+      <div><span>Low stock</span><strong>{{ admin_dashboard_stats.low_stock }}</strong><small>Needs attention</small></div>
+    </article>
+    <article class="dashboard-kpi">
+      <div><span>Recent revenue</span><strong>Rs. {{ admin_dashboard_stats.revenue|floatformat:0 }}</strong><small>Last 6 sales</small></div>
+    </article>
+    <article class="dashboard-kpi">
+      <div><span>Requests</span><strong>{{ admin_dashboard_stats.pending_requests }}</strong><small>Awaiting review</small></div>
+    </article>
+  </section>
+
+  <section class="dashboard-grid dashboard-grid-main">
+    <article class="dashboard-panel recent-sales-panel">
+      <div class="panel-heading"><div><h2>Recent sales</h2><p>Your latest transactions</p></div><a href="{% url 'admin:sales_sale_changelist' %}">View all</a></div>
+      <div class="dashboard-list">
+        {% for sale in admin_recent_sales %}
+        <a href="{% url 'admin:sales_sale_change' sale.id %}" class="sale-row"><span class="sale-number">#{{ sale.id }}</span><span class="sale-book"><strong>{{ sale.book.title }}</strong><small>{{ sale.sale_at|date:"M d, Y" }}</small></span><strong class="sale-total">Rs. {{ sale.total_price|floatformat:2 }}</strong></a>
+        {% empty %}<p class="dashboard-empty">No sales recorded yet.</p>{% endfor %}
+      </div>
+    </article>
+    <article class="dashboard-panel quick-panel">
+      <div class="panel-heading"><div><h2>Shortcuts</h2><p>Move through your workspace</p></div></div>
+      <a href="{% url 'admin:accounts_user_add' %}" class="quick-action"><span><strong>Add staff member</strong><small>Create a new account</small></span><i>↗</i></a>
+      <a href="{% url 'admin:books_book_changelist' %}" class="quick-action"><span><strong>Manage catalogue</strong><small>Update books and prices</small></span><i>↗</i></a>
+      <a href="{% url 'admin:log_activitylog_changelist' %}" class="quick-action"><span><strong>View activity</strong><small>Review recent events</small></span><i>↗</i></a>
+    </article>
+  </section>
+
+  <section class="dashboard-grid dashboard-grid-bottom">
+    <article class="dashboard-panel">
+      <div class="panel-heading"><div><h2>Stock attention</h2><p>Books below the 20-copy threshold</p></div><a href="{% url 'admin:books_stock_changelist' %}">View all</a></div>
+      <div class="dashboard-list">
+        {% for book in admin_low_stock_books %}
+        <a href="{% url 'admin:books_book_change' book.id %}" class="stock-row"><span class="book-avatar">{{ book.title|slice:":1"|upper }}</span><span class="stock-book"><strong>{{ book.title }}</strong><small>{{ book.author }}</small></span><span class="stock-count">{{ book.stock.quantity }} left</span></a>
+        {% empty %}<p class="dashboard-empty">All books have healthy stock levels.</p>{% endfor %}
+      </div>
+    </article>
+    <article class="dashboard-panel">
+      <div class="panel-heading"><div><h2>Recent activity</h2><p>Latest staff actions</p></div><a href="{% url 'admin:log_activitylog_changelist' %}">View all</a></div>
+      <div class="dashboard-list">
+        {% for activity in admin_recent_activity %}
+        <div class="activity-row"><span class="activity-dot"></span><span><strong>{{ activity.details|truncatechars:54 }}</strong><small>{{ activity.created_at|timesince }} ago</small></span></div>
+        {% empty %}<p class="dashboard-empty">No recent activity yet.</p>{% endfor %}
+      </div>
+    </article>
+  </section>
+</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

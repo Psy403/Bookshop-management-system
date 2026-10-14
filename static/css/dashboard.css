@@ -1,0 +1,64 @@
+.dashboard-stat-card {
+  background: linear-gradient(180deg, var(--bg-secondary), var(--bg-primary));
+}
+
+.dashboard-stat-card-blue {
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.dashboard-stat-card-green {
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.dashboard-stat-card-purple {
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.dashboard-stat-card-warning {
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.dashboard-stat-icon {
+  border: 1px solid transparent;
+}
+
+.dashboard-stat-icon-blue {
+  background: rgba(59, 130, 246, 0.18);
+  color: var(--primary);
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+.dashboard-stat-icon-green {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--success);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.dashboard-stat-icon-purple {
+  background: rgba(139, 92, 246, 0.12);
+  color: var(--secondary);
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+.dashboard-stat-icon-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.dashboard-management-card {
+  background: var(--surface-soft);
+  border-color: var(--border);
+}
+
+.dashboard-action-green {
+  color: var(--success);
+}
+
+.dashboard-action-purple {
+  color: var(--secondary);
+}
+
+.dashboard-action-warning {
+  color: var(--warning);
+}

@@ -1,0 +1,29 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div class="module admin-transaction-workflow admin-stock-remove">
+  <h1>Remove stock: {{ stock_record.book.title }}</h1>
+  <p class="admin-workflow-intro">Review the current inventory, then enter the quantity to remove.</p>
+  <div class="admin-workflow-summary">
+    <p>Current stock <strong>{{ stock_record.quantity }}</strong></p>
+  </div>
+  {% if error %}<p class="errornote">{{ error }}</p>{% endif %}
+  <form method="post" id="remove-stock-form" class="admin-workflow-form"
+        data-book-title="{{ stock_record.book.title }}"
+        data-current-stock="{{ stock_record.quantity }}"
+        data-cancel-url="{% url 'admin:books_stock_changelist' %}">
+    {% csrf_token %}
+    <div class="admin-workflow-fields">
+      <label for="quantity">Quantity to remove
+        <input id="quantity" name="quantity" type="number" min="1" max="{{ stock_record.quantity }}" required>
+      </label>
+    </div>
+    <div class="submit-row">
+      <input type="submit" value="Delete stock quantity" class="default">
+      <a href="{% url 'admin:books_stock_changelist' %}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% load static %}
+<script src="{% static 'admin/js/remove-stock.js' %}" defer></script>
+{% endblock %}

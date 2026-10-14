@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.dateparse import parse_date
@@ -28,7 +29,12 @@ def activity_list(request):
 @login_required
 def mark_activity_read(request, activity_id):
     if request.method == "POST":
-        activity = get_object_or_404(ActivityLog, id=activity_id)
+        activity = get_object_or_404(
+            ActivityLog.objects.filter(
+                Q(recipient=request.user) | Q(recipient__isnull=True)
+            ),
+            id=activity_id,
+        )
         ActivityLogRead.objects.get_or_create(user=request.user, activity=activity)
     return redirect(request.POST.get("next") or "activity_list")
 
@@ -36,7 +42,9 @@ def mark_activity_read(request, activity_id):
 @login_required
 def mark_all_activities_read(request):
     if request.method == "POST":
-        unread_ids = ActivityLog.objects.exclude(
+        unread_ids = ActivityLog.objects.filter(
+            Q(recipient=request.user) | Q(recipient__isnull=True)
+        ).exclude(
             reads__user=request.user
         ).values_list("id", flat=True)
         ActivityLogRead.objects.bulk_create(

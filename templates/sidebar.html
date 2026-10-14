@@ -1,14 +1,14 @@
 <div class="flex items-center justify-between px-4 py-3 lg:hidden">
 
     <a href="#"
-       class="text-lg font-semibold text-slate-900">
+       class="text-lg font-semibold theme-primary-text">
         Book shop
     </a>
     <button
         id="menu-btn"
-        class="rounded-lg bg-[#0e1a3a] px-4 py-3 text-white"
+        class="mobile-menu-button rounded-lg px-4 py-3 text-white"
         type="button">
-        <i class="fa-solid fa-bars text-xl"></i>
+        <i class="fa-bars text-xl"></i>
     </button>
 
 </div>
@@ -18,30 +18,30 @@
 </div>
 <aside
     id="sidebar"
-    class="fixed inset-y-0 left-0 z-50 hidden w-72 bg-[#0e1a3a] p-0 text-slate-100 shadow-2xl lg:flex lg:w-72 lg:flex-col lg:justify-between">
+    class="theme-sidebar fixed inset-y-0 left-0 z-50 hidden w-72 p-0 shadow-2xl lg:flex lg:w-72 lg:flex-col lg:justify-between">
 
     <div>
 
-        <div class="border-b border-white/10 px-6 py-6">
+        <div class="theme-divider border-b px-6 py-6">
 
-            <p class="text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">
+            <p class="text-xs font-semibold uppercase tracking-[0.35em] theme-muted">
                 BOok shop
             </p>
 
             <div class="mt-4 flex items-center gap-3">
 
                 <div
-                    class="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-lg font-semibold">
+                    class="sidebar-brand-avatar flex h-11 w-11 items-center justify-center rounded-full text-lg font-semibold">
                     S
                 </div>
 
                 <div>
 
-                    <p class="font-semibold">
+                    <p class="font-semibold theme-primary-text">
                         Staff panel
                     </p>
 
-                    <p class="text-sm text-slate-400">
+                    <p class="text-sm theme-muted">
                         Bookshop Management
                     </p>
 
@@ -55,9 +55,10 @@
         <nav class="mt-6 space-y-2 px-3">
 
             <a href="{% url 'dashboard' %}"
-               class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition hover:bg-white/10 hover:text-white">
+               class="{% if request.resolver_match.url_name == 'dashboard' %}sidebar-active-link{% else %}sidebar-link{% endif %} flex items-center gap-3 rounded-xl px-4 py-3 transition hover:text-white"
+               {% if request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>
 
-                <span class="text-base">
+                <span class="sidebar-link-icon text-base">
                     <i class="fa-solid fa-gauge-high"></i>
                 </span>
 
@@ -71,9 +72,10 @@
            
 
             <a href="{% url 'sale_list'%}"
-               class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition hover:bg-white/10 hover:text-white">
+               class="{% if request.resolver_match.url_name == 'sale_list' or request.resolver_match.url_name == 'sale_create' or request.resolver_match.url_name == 'sale_report' %}sidebar-active-link{% else %}sidebar-link{% endif %} flex items-center gap-3 rounded-xl px-4 py-3 transition hover:text-white"
+               {% if request.resolver_match.url_name == 'sale_list' or request.resolver_match.url_name == 'sale_create' or request.resolver_match.url_name == 'sale_report' %}aria-current="page"{% endif %}>
 
-                <span class="text-base">
+                <span class="sidebar-link-icon text-base">
                     <i class="fa-solid fa-clipboard-list"></i>
                 </span>
 
@@ -85,9 +87,10 @@
 
 
             <a href="{% url 'book_stock_list' %}"
-               class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition hover:bg-white/10 hover:text-white">
+               class="{% if request.resolver_match.url_name == 'book_stock_list' %}sidebar-active-link{% else %}sidebar-link{% endif %} flex items-center gap-3 rounded-xl px-4 py-3 transition hover:text-white"
+               {% if request.resolver_match.url_name == 'book_stock_list' %}aria-current="page"{% endif %}>
 
-                <span class="text-base">
+                <span class="sidebar-link-icon text-base">
                     <i class="fa-solid fa-square-poll-vertical"></i>
                 </span>
 
@@ -97,9 +100,10 @@
 
             </a>
             <a href="{% url 'category_list' %}"
-               class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition hover:bg-white/10 hover:text-white">
+               class="{% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category_add' or request.resolver_match.url_name == 'category_edit' or request.resolver_match.url_name == 'category_delete' %}sidebar-active-link{% else %}sidebar-link{% endif %} flex items-center gap-3 rounded-xl px-4 py-3 transition hover:text-white"
+               {% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category_add' or request.resolver_match.url_name == 'category_edit' or request.resolver_match.url_name == 'category_delete' %}aria-current="page"{% endif %}>
 
-                <span class="text-base">
+                <span class="sidebar-link-icon text-base">
                     <i class="fa-solid fa-square-poll-vertical"></i>
                 </span>
 
@@ -110,9 +114,10 @@
             </a>
 
             <a href="{% url 'return_list' %}"
-               class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition hover:bg-white/10 hover:text-white">
+               class="{% if request.resolver_match.url_name == 'return_list' or request.resolver_match.url_name == 'return_create' or request.resolver_match.url_name == 'return_report' %}sidebar-active-link{% else %}sidebar-link{% endif %} flex items-center gap-3 rounded-xl px-4 py-3 transition hover:text-white"
+               {% if request.resolver_match.url_name == 'return_list' or request.resolver_match.url_name == 'return_create' or request.resolver_match.url_name == 'return_report' %}aria-current="page"{% endif %}>
 
-                <span class="text-base">
+                <span class="sidebar-link-icon text-base">
                     <i class="fa-solid fa-rotate-left"></i>
                 </span>
 
@@ -123,9 +128,10 @@
             </a>
 
             <a href="{% url 'activity_list' %}"
-               class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition hover:bg-white/10 hover:text-white">
+               class="{% if request.resolver_match.url_name == 'activity_list' %}sidebar-active-link{% else %}sidebar-link{% endif %} flex items-center gap-3 rounded-xl px-4 py-3 transition hover:text-white"
+               {% if request.resolver_match.url_name == 'activity_list' %}aria-current="page"{% endif %}>
 
-                <span class="text-base">
+                <span class="sidebar-link-icon text-base">
                     <i class="fa-solid fa-clock-rotate-left"></i>
                 </span>
 
@@ -140,40 +146,24 @@
 
     </div>
 
-    <div class="border-t border-white/10 p-3">
+    <div class="theme-divider border-t p-3">
 
-        <a href="{% url 'staff_logout' %}"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-300 transition hover:bg-red-500/20 hover:text-red-300">
+        <form method="post" action="{% url 'staff_logout' %}">
+            {% csrf_token %}
+            <button type="submit"
+                    class="theme-error-action flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition">
 
-            <span class="text-base">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </span>
+                <span class="text-base">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </span>
 
-            <span>
-                Logout
-            </span>
+                <span>
+                    Logout
+                </span>
 
-        </a>
+            </button>
+        </form>
 
     </div>
 
 </aside>
-
-<script>
-
-    const menuBtn = document.getElementById("menu-btn");
-    const sidebar = document.getElementById("sidebar");
-    const menuOverlay = document.getElementById("menu-overlay");
-
-    menuBtn.addEventListener("click", function () {
-
-        sidebar.classList.remove("hidden");
-
-        menuOverlay.classList.remove("hidden");
-
-    });
-    menuOverlay.addEventListener("click", function () {
-        sidebar.classList.add("hidden");
-        menuOverlay.classList.add("hidden");
-    });
-</script>

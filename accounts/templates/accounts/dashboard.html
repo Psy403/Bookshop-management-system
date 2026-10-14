@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Dashboard | Book Shop Management{% endblock %}
 
@@ -6,43 +7,47 @@
 
 {% block page_title %}Book Shop Management{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="space-y-8">
     <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-        <div class="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
+        <div class="dashboard-stat-card dashboard-stat-card-blue theme-card rounded-2xl border p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
             <div class="flex items-start justify-between gap-4">
                 <div>
-                    <p class="text-sm font-medium text-slate-500">Total Books</p>
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{{ total_books }}</p>
-                    <p class="mt-1 text-xs text-slate-500">Books in the catalogue</p>
+                    <p class="text-sm font-medium theme-muted">Total Books</p>
+                    <p class="mt-2 text-3xl font-bold tracking-tight theme-primary-text">{{ total_books }}</p>
+                    <p class="mt-1 text-xs theme-muted">Books in the catalogue</p>
                 </div>
-                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+                <span class="dashboard-stat-icon dashboard-stat-icon-blue flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
                     <i class="fa-solid fa-book text-xl"></i>
                 </span>
             </div>
         </div>
 
-        <div class="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
+        <div class="dashboard-stat-card dashboard-stat-card-purple theme-card rounded-2xl border p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
             <div class="flex items-start justify-between gap-4">
                 <div>
-                    <p class="text-sm font-medium text-slate-500">Total Stock</p>
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{{ total_stock }}</p>
-                    <p class="mt-1 text-xs text-slate-500">Copies currently available</p>
+                    <p class="text-sm font-medium theme-muted">Sales Revenue</p>
+                    <p class="mt-2 text-3xl font-bold tracking-tight theme-primary-text">Rs. {{ total_revenue|floatformat:2 }}</p>
+                    <p class="mt-1 text-xs theme-muted">Total value of recorded sales</p>
                 </div>
-                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
-                    <i class="fa-solid fa-boxes-stacked text-xl"></i>
+                <span class="dashboard-stat-icon dashboard-stat-icon-purple flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
+                    <i class="fa-solid fa-money-bill-wave text-xl"></i>
                 </span>
             </div>
         </div>
 
-        <div class="rounded-2xl border border-orange-100 bg-gradient-to-br from-orange-50 to-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
+        <div class="dashboard-stat-card dashboard-stat-card-warning theme-card rounded-2xl border p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
             <div class="flex items-start justify-between gap-4">
                 <div>
-                    <p class="text-sm font-medium text-slate-500">Total Returns</p>
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900">{{ total_returns }}</p>
-                    <p class="mt-1 text-xs text-slate-500">Recorded return transactions</p>
+                    <p class="text-sm font-medium theme-muted">Total Returns</p>
+                    <p class="mt-2 text-3xl font-bold tracking-tight theme-primary-text">{{ total_returns }}</p>
+                    <p class="mt-1 text-xs theme-muted">Recorded return transactions</p>
                 </div>
-                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+                <span class="dashboard-stat-icon dashboard-stat-icon-warning flex h-12 w-12 shrink-0 items-center justify-center rounded-xl">
                     <i class="fa-solid fa-rotate-left text-xl"></i>
                 </span>
             </div>
@@ -51,36 +56,36 @@
 
     <div>
         <div class="mb-5">
-            <h2 class="text-xl font-bold text-slate-900">Management</h2>
-            <p class="mt-1 text-sm text-slate-500">Manage your bookshop operations from one place.</p>
+            <h2 class="text-xl font-bold theme-primary-text">Management</h2>
+            <p class="mt-1 text-sm theme-muted">Manage your bookshop operations from one place.</p>
         </div>
 
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            <a href="{% url 'book_stock_list' %}" class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-md">
-                <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition group-hover:bg-emerald-600 group-hover:text-white">
+            <a href="{% url 'book_stock_list' %}" class="dashboard-management-card group theme-card rounded-2xl border p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
+                <span class="dashboard-stat-icon dashboard-stat-icon-green flex h-12 w-12 items-center justify-center rounded-xl transition group-hover:scale-105">
                     <i class="fa-solid fa-boxes-stacked text-xl"></i>
                 </span>
-                <h3 class="mt-5 text-lg font-semibold text-slate-900">Stock</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Monitor books, quantities, and stock availability.</p>
-                <span class="mt-5 inline-flex items-center text-sm font-semibold text-emerald-600">Manage Stock <i class="fa-solid fa-arrow-right ml-2 transition group-hover:translate-x-1"></i></span>
+                <h3 class="mt-5 text-lg font-semibold theme-primary-text">Stock</h3>
+                <p class="mt-2 text-sm leading-6 theme-muted">Monitor books, quantities, and stock availability.</p>
+                <span class="dashboard-action dashboard-action-green mt-5 inline-flex items-center text-sm font-semibold">Manage Stock <i class="fa-solid fa-arrow-right ml-2 transition group-hover:translate-x-1"></i></span>
             </a>
 
-            <a href="{% url 'sale_list' %}" class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-purple-200 hover:shadow-md">
-                <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-50 text-purple-600 transition group-hover:bg-purple-600 group-hover:text-white">
+            <a href="{% url 'sale_list' %}" class="dashboard-management-card group theme-card rounded-2xl border p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
+                <span class="dashboard-stat-icon dashboard-stat-icon-purple flex h-12 w-12 items-center justify-center rounded-xl transition group-hover:scale-105">
                     <i class="fa-solid fa-cart-shopping text-xl"></i>
                 </span>
-                <h3 class="mt-5 text-lg font-semibold text-slate-900">Sales</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Manage book sales and review transactions.</p>
-                <span class="mt-5 inline-flex items-center text-sm font-semibold text-purple-600">Manage Sales <i class="fa-solid fa-arrow-right ml-2 transition group-hover:translate-x-1"></i></span>
+                <h3 class="mt-5 text-lg font-semibold theme-primary-text">Sales</h3>
+                <p class="mt-2 text-sm leading-6 theme-muted">Manage book sales and review transactions.</p>
+                <span class="dashboard-action dashboard-action-purple mt-5 inline-flex items-center text-sm font-semibold">Manage Sales <i class="fa-solid fa-arrow-right ml-2 transition group-hover:translate-x-1"></i></span>
             </a>
 
-            <a href="{% url 'return_list' %}" class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-orange-200 hover:shadow-md">
-                <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-50 text-orange-600 transition group-hover:bg-orange-600 group-hover:text-white">
+            <a href="{% url 'return_list' %}" class="dashboard-management-card group theme-card rounded-2xl border p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md">
+                <span class="dashboard-stat-icon dashboard-stat-icon-warning flex h-12 w-12 items-center justify-center rounded-xl transition group-hover:scale-105">
                     <i class="fa-solid fa-rotate-left text-xl"></i>
                 </span>
-                <h3 class="mt-5 text-lg font-semibold text-slate-900">Returns</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">Record returned books and review return history.</p>
-                <span class="mt-5 inline-flex items-center text-sm font-semibold text-orange-600">Manage Returns <i class="fa-solid fa-arrow-right ml-2 transition group-hover:translate-x-1"></i></span>
+                <h3 class="mt-5 text-lg font-semibold theme-primary-text">Returns</h3>
+                <p class="mt-2 text-sm leading-6 theme-muted">Record returned books and review return history.</p>
+                <span class="dashboard-action dashboard-action-warning mt-5 inline-flex items-center text-sm font-semibold">Manage Returns <i class="fa-solid fa-arrow-right ml-2 transition group-hover:translate-x-1"></i></span>
             </a>
         </div>
     </div>

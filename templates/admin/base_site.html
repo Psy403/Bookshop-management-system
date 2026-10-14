@@ -1,0 +1,62 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | Bookshop Admin{% endblock %}
+
+{% block dark-mode-vars %}{% endblock %}
+
+{% block branding %}
+<a href="{% url 'admin:index' %}" class="admin-brand">
+  <span class="admin-brand-mark">B</span>
+  <span>
+    <strong>Bookshop</strong>
+    <small>Management workspace</small>
+  </span>
+</a>
+{% endblock %}
+
+{% block usertools %}
+{% if has_permission %}
+<div id="user-tools" class="admin-user-tools">
+  <span>Welcome, <strong>{% firstof user.get_short_name user.get_username %}</strong></span>
+  {% if user.has_usable_password %}<a href="{% url 'admin:password_change' %}">Change password</a>{% endif %}
+  <form method="post" action="{% url 'admin:logout' %}">
+    {% csrf_token %}
+    <button type="submit">Log out</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}
+<div class="admin-quick-links">
+  <button id="admin-theme-toggle" class="admin-theme-toggle" type="button">
+    <span class="admin-theme-toggle-icon" aria-hidden="true">☀</span>
+    <span class="admin-theme-toggle-label">Light mode</span>
+  </button>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<meta name="color-scheme" content="light dark">
+{% if request.user.is_authenticated %}
+<meta name="staff-tab-logout-url" content="{% url 'staff_tab_logout' %}">
+{% endif %}
+<link rel="stylesheet" href="{% static 'admin/css/admin.css' %}">
+<script src="{% static 'admin/js/admin.js' %}" defer></script>
+{% if request.user.is_authenticated %}
+<script src="{% static 'js/session-lifecycle.js' %}" defer></script>
+{% endif %}
+{% endblock %}
+
+{% block responsive %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/admin-layout.css' %}">
+{% endblock %}
+
+{% block footer %}
+<div id="footer">
+  <span class="admin-footer-note">Simple tools for a smoother day.</span>
+</div>
+{% endblock %}

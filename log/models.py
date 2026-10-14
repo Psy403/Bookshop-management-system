@@ -9,11 +9,14 @@ class ActivityLog(models.Model):
         blank=True,
         related_name="activity_logs",
     )
-    action = models.CharField(max_length=20)
-    path = models.CharField(max_length=255)
-    status_code = models.PositiveSmallIntegerField()
-    ip_address = models.GenericIPAddressField(null=True, blank=True)
-    details = models.TextField(blank=True, verbose_name="Description")
+    recipient = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="notifications",
+    )
+    details = models.TextField(verbose_name="Event")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -23,7 +26,7 @@ class ActivityLog(models.Model):
 
     def __str__(self):
         username = self.user.username if self.user else "Anonymous"
-        return f"{username} {self.action} {self.path}"
+        return f"{username}: {self.details}"
 
 
 class ActivityLogRead(models.Model):

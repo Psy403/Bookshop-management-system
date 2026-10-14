@@ -1,0 +1,45 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div class="module admin-transaction-workflow admin-stock-receive">
+  <h1>Receive stock from purchase</h1>
+  <p class="admin-workflow-intro">Record quantities received against an existing purchase order.</p>
+  <form method="get" class="admin-workflow-search">
+    <label for="purchase_id">Purchase ID</label>
+    <input id="purchase_id" name="purchase_id" value="{{ purchase_id }}" type="number" min="1" required>
+    <input type="submit" value="Show purchased books" class="default">
+  </form>
+  {% if purchase %}
+  <div class="admin-workflow-summary">
+    <h2>Purchase #{{ purchase.pk }}</h2>
+    <p>Supplier <strong>{{ purchase.supplier.name }}</strong><span class="admin-workflow-summary-divider">·</span>Order date <strong>{{ purchase.order_date }}</strong></p>
+  </div>
+  <form method="post" class="admin-workflow-form">
+    {% csrf_token %}
+    <input type="hidden" name="purchase_id" value="{{ purchase.pk }}">
+    <div class="admin-workflow-table-wrap">
+    <table>
+      <thead><tr><th>Book</th><th>Purchased</th><th>Already received</th><th>Remaining</th><th>Receive now</th></tr></thead>
+      <tbody>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.book.title }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.received_quantity }}</td>
+        <td>{{ item.remaining_quantity }}</td>
+        <td><input type="number" name="receive_{{ item.pk }}" value="0" min="0" max="{{ item.remaining_quantity }}"></td>
+      </tr>
+      {% empty %}<tr><td colspan="5">This purchase has no book items.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <div class="submit-row">
+      <input type="submit" name="receive_stock" value="Receive selected stock" class="default">
+      <a href="{% url 'admin:books_stock_changelist' %}">Back to stock</a>
+    </div>
+  </form>
+  {% elif purchase_id %}
+  <p class="errornote">No purchase was found for ID {{ purchase_id }}.</p>
+  {% endif %}
+</div>
+{% endblock %}

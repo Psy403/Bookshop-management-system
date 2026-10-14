@@ -58,19 +58,6 @@
     <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">No bill was found for ID {{ bill_id }}.</div>
   {% endif %}
 </div>
-<script>
-  function updateRefund() {
-    let total = 0;
-    document.querySelectorAll(".return-check").forEach((check) => {
-      const row = check.closest("tr");
-      const quantity = row.querySelector(".return-quantity");
-      const amount = check.checked ? Number(check.dataset.price) * Number(quantity.value || 0) : 0;
-      row.querySelector(".return-amount").textContent = `Rs. ${amount.toFixed(2)}`;
-      total += amount;
-    });
-    document.getElementById("total-refund").value = total ? `Rs. ${total.toFixed(2)}` : "";
-  }
-  document.querySelectorAll(".return-check, .return-quantity").forEach((element) => element.addEventListener("input", updateRefund));
-  updateRefund();
-</script>
+{% load static %}
+<script src="{% static 'books/js/return-form.js' %}" defer></script>
 {% endblock %}

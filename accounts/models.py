@@ -15,7 +15,7 @@ class User(AbstractUser):
         choices=ROLE_CHOICES,
         default="STAFF",
     )
-    middle_name = models.CharField(max_length=150, blank=True)
+    middle_name = models.CharField(max_length=150, blank=True,null=True)
     phone_number = models.CharField(max_length=20, blank=True)
     hiring_date = models.DateField(default=timezone.localdate)
     profile_picture = models.ImageField(
@@ -35,6 +35,14 @@ class ContactNumber(models.Model):
 
     def __str__(self):
         return self.number
+
+
+class ContactEmail(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="contact_emails")
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.email
 
 
 class ModulePermission(models.Model):
@@ -79,10 +87,12 @@ class ProfileChangeRequest(models.Model):
         related_name="profile_change_requests",
     )
     first_name = models.CharField(max_length=150, blank=True)
+    username = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
-    email = models.EmailField(blank=True)
+    email = models.TextField(blank=True)
     middle_name = models.CharField(max_length=150, blank=True)
     contact_numbers = models.TextField(blank=True)
+    password_hash = models.TextField(blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="PENDING")
     requested_at = models.DateTimeField(auto_now_add=True)
     reviewed_at = models.DateTimeField(null=True, blank=True)
