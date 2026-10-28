@@ -3,17 +3,15 @@
 
   const password = document.getElementById("password");
   const passwordToggle = document.querySelector("[data-toggle-password]");
-  const passwordIcon = document.getElementById("passwordIcon");
-
   passwordToggle?.addEventListener("click", function () {
-    if (!password || !passwordIcon) {
+    if (!password) {
       return;
     }
     const reveal = password.type === "password";
     password.type = reveal ? "text" : "password";
-    passwordIcon.classList.toggle("fa-eye", !reveal);
-    passwordIcon.classList.toggle("fa-eye-slash", reveal);
+    passwordToggle.textContent = reveal ? "Hide" : "Show";
     passwordToggle.setAttribute("aria-label", reveal ? "Hide password" : "Show password");
+    passwordToggle.setAttribute("aria-pressed", String(reveal));
   });
 
   document.querySelectorAll("#staff-login-messages [data-icon]").forEach(function (message) {

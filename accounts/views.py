@@ -15,17 +15,13 @@ from retur.models import Return
 from log.models import ActivityLog
 from log.utils import record_activity
 from .avatar_options import AVATAR_OPTIONS
-from .forms import ProfileChangeRequestForm, ProfilePictureForm
-from .models import ContactEmail, ProfileChangeRequest, User
+from .forms import AccountCreationRequestForm, ProfileChangeRequestForm, ProfilePictureForm
+from .models import AccountCreationRequest, ContactEmail, ContactNumber, ProfileChangeRequest, User
 
 
 
 
 def staff_login(request):
-
-    if request.user.is_authenticated:
-        return redirect("dashboard")
-
     if request.method == "POST":
 
         username = request.POST.get("username", "").strip()
@@ -69,6 +65,49 @@ def staff_login(request):
     return render(
         request,
         "accounts/staff_login.html"
+    )
+
+
+def signup(request):
+    if request.method == "POST":
+        form = AccountCreationRequestForm(request.POST)
+        if form.is_valid():
+            account_request = form.save(commit=False)
+            account_request.password_hash = make_password(form.cleaned_data["password"])
+            account_request.save()
+            for administrator in User.objects.filter(is_active=True, is_staff=True):
+                ActivityLog.objects.create(
+                    recipient=administrator,
+                    details=(
+                        f"New account request from {account_request.first_name} "
+                        f"{account_request.last_name}."
+                    ),
+                )
+            return render(
+                request,
+                "accounts/signup.html",
+                {"submitted": True, "form": AccountCreationRequestForm()},
+            )
+    else:
+        form = AccountCreationRequestForm()
+
+    fields_by_step = (
+        ("first_name", "middle_name", "last_name", "username"),
+        ("email", "phone_number"),
+        ("password", "confirm_password"),
+    )
+    active_step = next(
+        (
+            index
+            for index, field_names in enumerate(fields_by_step)
+            if any(name in form.errors for name in field_names)
+        ),
+        0,
+    )
+    return render(
+        request,
+        "accounts/signup.html",
+        {"form": form, "active_step": active_step},
     )
 
 

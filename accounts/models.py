@@ -110,3 +110,35 @@ class ProfileChangeRequest(models.Model):
 
     def __str__(self):
         return f"{self.user.username} profile change ({self.status})"
+
+
+class AccountCreationRequest(models.Model):
+    STATUS_CHOICES = (
+        ("PENDING", "Pending"),
+        ("APPROVED", "Approved"),
+        ("REJECTED", "Rejected"),
+    )
+
+    first_name = models.CharField(max_length=150)
+    middle_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150)
+    username = models.CharField(max_length=150)
+    email = models.EmailField()
+    phone_number = models.CharField(max_length=20)
+    password_hash = models.TextField()
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="PENDING")
+    requested_at = models.DateTimeField(auto_now_add=True)
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    reviewed_by = models.ForeignKey(
+        "accounts.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reviewed_account_creation_requests",
+    )
+
+    class Meta:
+        ordering = ("-requested_at",)
+
+    def __str__(self):
+        return f"{self.username} account request ({self.status})"

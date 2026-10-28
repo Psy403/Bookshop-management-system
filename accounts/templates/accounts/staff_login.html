@@ -4,69 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Staff Login | Mart Management System</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    >
-    <link rel="stylesheet" href="{% static 'css/staff-login.css' %}">
-
+    <meta name="theme-color" content="#2743ff">
+    <title>Sign in | Ganesh Pustak Pasal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/staff-login.css' %}?v=20261027">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="login-page min-h-screen">
+<body class="login-page">
+    <main class="auth-layout">
+        <section class="brand-panel" aria-labelledby="brand-headline">
+            <a class="brand-wordmark" href="{% url 'staff_login' %}" aria-label="Ganesh Pustak Pasal home">
+                <span>Ganesh Pustak Pasal</span>
+            </a>
 
-    <div class="min-h-screen flex items-center justify-center px-4 py-8">
+            <div class="brand-main">
+                <h1 id="brand-headline">Smarter inventory,<br>Simpler <span class="headline-accent">sales.</span></h1>
+                <p class="brand-supporting">Everything your bookshop needs, in one place.</p>
 
-        <div class="w-full max-w-md">
+                <ul class="feature-list" aria-label="Bookshop system features">
+                    <li>
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h8M8 10h6"/></svg>
+                        </span>
+                        <span><strong>Inventory Management</strong><small>Keep every title and stock level in view.</small></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M4 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.5a2 2 0 0 0 2-1.6L21 8H7"/><circle cx="10" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M12 10h4M14 8v4"/></svg>
+                        </span>
+                        <span><strong>Fast &amp; Easy Billing</strong><small>Make checkout smooth for every customer.</small></span>
+                    </li>
+                    <li>
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 6-7"/><path d="M16 6h4v4"/></svg>
+                        </span>
+                        <span><strong>Sales Overview &amp; Reports</strong><small>Understand performance at a glance.</small></span>
+                    </li>
+                </ul>
+            </div>
 
-            <!-- Login Card -->
-            <div class="login-card rounded-2xl shadow-xl p-8">
+            <footer class="brand-footer">
+                <p class="brand-footer-label">Developed by</p>
+                <div class="developer-row">
+                    <span>Aayush Khatri Joshi</span>
+                </div>
+            </footer>
+        </section>
 
-                <!-- Logo / Icon -->
-                <div class="flex justify-center mb-5">
-                    <div class="login-icon-badge w-16 h-16 rounded-full flex items-center justify-center">
-                        <i class="login-brand-icon fa-solid fa-user-tie text-2xl"></i>
-                    </div>
+        <section class="form-panel" aria-labelledby="welcome-heading">
+            <p class="signup-prompt">
+                <span>New here?</span>
+                <a href="{% url 'signup' %}">Create account</a>
+            </p>
+            <div class="auth-content">
+                <div class="welcome-copy">
+
+                    <h2 id="welcome-heading">Welcome back</h2>
+                    <p>Sign in to your account to continue</p>
                 </div>
 
-                <!-- Heading -->
-                <div class="text-center mb-8">
-                    <h1 class="login-primary-text text-2xl font-bold">
-                        Staff Login
-                    </h1>
-
-                    <p class="login-muted text-sm mt-2">
-                        Login to your staff account
-                    </p>
-                </div>
-
-                <!-- Login Form -->
-                <form method="POST">
-
+                <form method="POST" class="login-form">
                     {% csrf_token %}
 
-                    <!-- Username -->
-                    <div class="mb-5">
-
-                        <label
-                            for="username"
-                            class="login-secondary-text block text-sm font-medium mb-2"
-                        >
-                            Username
-                        </label>
-
-                        <div class="relative">
-
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                <i class="login-muted fa-solid fa-user"></i>
-                            </div>
-
+                    <div class="form-field">
+                        <label for="username">Username</label>
+                        <div class="input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
                             <input
                                 type="text"
                                 id="username"
@@ -75,29 +81,14 @@
                                 autocomplete="username"
                                 required
                                 autofocus
-                                class="login-input w-full rounded-lg border py-3 pl-10 pr-4 text-sm outline-none transition"
                             >
-
                         </div>
-
                     </div>
 
-                    <!-- Password -->
-                    <div class="mb-5">
-
-                        <label
-                            for="password"
-                            class="login-secondary-text block text-sm font-medium mb-2"
-                        >
-                            Password
-                        </label>
-
-                        <div class="relative">
-
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-3">
-                                <i class="login-muted fa-solid fa-lock"></i>
-                            </div>
-
+                    <div class="form-field">
+                        <label for="password">Password</label>
+                        <div class="input-wrap">
+                            <svg class="field-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4.5" y="10" width="15" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/></svg>
                             <input
                                 type="password"
                                 id="password"
@@ -105,60 +96,21 @@
                                 placeholder="Enter your password"
                                 autocomplete="current-password"
                                 required
-                                class="login-input w-full rounded-lg border py-3 pl-10 pr-12 text-sm outline-none transition"
                             >
-
-                            <button
-                                type="button"
-                                data-toggle-password
-                                aria-label="Show password"
-                                class="login-muted absolute inset-y-0 right-0 flex items-center pr-3"
-                            >
-                                <i id="passwordIcon" class="fa-solid fa-eye"></i>
-                            </button>
-
+                            <button type="button" data-toggle-password aria-label="Show password" aria-pressed="false">Show</button>
                         </div>
-
                     </div>
 
-                    <!-- Login Button -->
-                    <button
-                        type="submit"
-                        class="login-submit w-full rounded-lg py-3 text-sm font-semibold text-white shadow-md transition duration-200 focus:outline-none"
-                    >
-                        <i class="fa-solid fa-right-to-bracket mr-2"></i>
-                        Login
+                    <button type="submit" class="login-submit">
+                        Sign in
                     </button>
-
                 </form>
 
-                <!-- Staff Account Information -->
-                <div class="login-footer mt-7 text-center border-t pt-6">
-
-                    <p class="login-muted text-sm">
-                        Staff accounts are created by the administrator.
-                    </p>
-
-                    <p class="login-disabled text-xs mt-1">
-                        Contact your administrator if you need an account.
-                    </p>
-
-                </div>
-
+                <p class="accountability-note">The account owner is responsible for all account activity.</p>
             </div>
 
-            <!-- Footer -->
-            <div class="text-center mt-6">
-
-                <p class="login-muted text-xs">
-                    © {% now "Y" %} Mart Management System
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
+        </section>
+    </main>
 
     {% if messages %}
     <div id="staff-login-messages" hidden>
@@ -168,7 +120,6 @@
     </div>
     {% endif %}
 
-    <script src="{% static 'js/staff-login.js' %}" defer></script>
-
+    <script src="{% static 'js/staff-login.js' %}?v=20261027" defer></script>
 </body>
 </html>

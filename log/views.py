@@ -1,15 +1,15 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.dateparse import parse_date
 
-from .models import ActivityLog, ActivityLogRead
+from .models import ActivityLogRead
+from .utils import visible_activities_for
 
 
 @login_required
 def activity_list(request):
-    activities = ActivityLog.objects.select_related("user").all()
+    activities = visible_activities_for(request.user).select_related("user")
     search = request.GET.get("search", "").strip()
     date_value = request.GET.get("date", "").strip()
     if search:
@@ -30,9 +30,7 @@ def activity_list(request):
 def mark_activity_read(request, activity_id):
     if request.method == "POST":
         activity = get_object_or_404(
-            ActivityLog.objects.filter(
-                Q(recipient=request.user) | Q(recipient__isnull=True)
-            ),
+            visible_activities_for(request.user),
             id=activity_id,
         )
         ActivityLogRead.objects.get_or_create(user=request.user, activity=activity)
@@ -42,9 +40,7 @@ def mark_activity_read(request, activity_id):
 @login_required
 def mark_all_activities_read(request):
     if request.method == "POST":
-        unread_ids = ActivityLog.objects.filter(
-            Q(recipient=request.user) | Q(recipient__isnull=True)
-        ).exclude(
+        unread_ids = visible_activities_for(request.user).exclude(
             reads__user=request.user
         ).values_list("id", flat=True)
         ActivityLogRead.objects.bulk_create(

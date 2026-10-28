@@ -22,9 +22,9 @@
     <article class="dashboard-kpi">
       <div><span>Recent revenue</span><strong>Rs. {{ admin_dashboard_stats.revenue|floatformat:0 }}</strong><small>Last 6 sales</small></div>
     </article>
-    <article class="dashboard-kpi">
+    <a class="dashboard-kpi dashboard-kpi-link" href="{% url 'admin:accounts_accountcreationrequest_changelist' %}">
       <div><span>Requests</span><strong>{{ admin_dashboard_stats.pending_requests }}</strong><small>Awaiting review</small></div>
-    </article>
+    </a>
   </section>
 
   <section class="dashboard-grid dashboard-grid-main">
@@ -39,6 +39,7 @@
     <article class="dashboard-panel quick-panel">
       <div class="panel-heading"><div><h2>Shortcuts</h2><p>Move through your workspace</p></div></div>
       <a href="{% url 'admin:accounts_user_add' %}" class="quick-action"><span><strong>Add staff member</strong><small>Create a new account</small></span><i>↗</i></a>
+      <a href="{% url 'admin:accounts_accountcreationrequest_changelist' %}" class="quick-action"><span><strong>Review account requests</strong><small>Approve or reject signups</small></span><i>↗</i></a>
       <a href="{% url 'admin:books_book_changelist' %}" class="quick-action"><span><strong>Manage catalogue</strong><small>Update books and prices</small></span><i>↗</i></a>
       <a href="{% url 'admin:log_activitylog_changelist' %}" class="quick-action"><span><strong>View activity</strong><small>Review recent events</small></span><i>↗</i></a>
     </article>

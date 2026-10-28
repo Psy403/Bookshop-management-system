@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.test import RequestFactory
+from django.utils import timezone
+from datetime import timedelta
 
 from accounts.context_processors import account_header
 from .models import ActivityLog, ActivityLogRead
@@ -38,6 +40,46 @@ class ActivityReadTests(TestCase):
                 activity=self.activity,
             ).exists()
         )
+
+    def test_notifications_only_include_activity_since_account_creation(self):
+        newcomer = get_user_model().objects.create_user(
+            username="newcomer",
+        )
+        old_activity = ActivityLog.objects.create(details="Earlier activity")
+        recent_activity = ActivityLog.objects.create(details="Later activity")
+        ActivityLog.objects.filter(pk=old_activity.pk).update(
+            created_at=newcomer.date_joined - timedelta(seconds=1)
+        )
+        ActivityLog.objects.filter(pk=recent_activity.pk).update(
+            created_at=newcomer.date_joined + timedelta(seconds=1)
+        )
+        request = RequestFactory().get("/")
+        request.user = newcomer
+
+        context = account_header(request)
+
+        self.assertIn(recent_activity, context["recent_notifications"])
+        self.assertNotIn(old_activity, context["recent_notifications"])
+
+    def test_activity_list_hides_other_users_private_auth_events(self):
+        other_user = get_user_model().objects.create_user(
+            username="other-staff",
+        )
+        private_activity = ActivityLog.objects.create(
+            user=other_user,
+            recipient=other_user,
+            details="Other user logged in.",
+        )
+        public_activity = ActivityLog.objects.create(
+            user=other_user,
+            details="A book was added.",
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("activity_list"))
+
+        self.assertNotContains(response, private_activity.details)
+        self.assertContains(response, public_activity.details)
 
 
 class ActivityLogAdminPermissionsTests(TestCase):

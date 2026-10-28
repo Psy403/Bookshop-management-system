@@ -1,9 +1,24 @@
-def record_activity(request, description, action=None):
-    user = request.user if getattr(request.user, "is_authenticated", False) else None
-    return ActivityLog.objects.create(user=user, details=description)
 from django.contrib import messages
+from django.db.models import Q
 
 from .models import ActivityLog
+
+
+def record_activity(request, description, action=None):
+    user = request.user if getattr(request.user, "is_authenticated", False) else None
+    recipient = user if action in {"LOGIN", "LOGOUT"} else None
+    return ActivityLog.objects.create(
+        user=user,
+        recipient=recipient,
+        details=description,
+    )
+
+
+def visible_activities_for(user):
+    return ActivityLog.objects.filter(
+        Q(recipient=user) | Q(recipient__isnull=True),
+        created_at__gte=user.date_joined,
+    )
 
 
 LOW_STOCK_THRESHOLD = 20

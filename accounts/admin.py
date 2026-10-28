@@ -3,12 +3,20 @@ from django.contrib.auth.admin import UserAdmin
 from django.shortcuts import redirect
 
 from django.contrib import messages
+from django.core.mail import send_mail
 from django.utils import timezone
 from django.db import transaction
 
 from log.models import ActivityLog
 from .forms import StaffCreationForm
-from .models import ContactEmail, ContactNumber, ProfileChangeRequest, User, ModulePermission
+from .models import (
+    AccountCreationRequest,
+    ContactEmail,
+    ContactNumber,
+    ProfileChangeRequest,
+    User,
+    ModulePermission,
+)
 
 admin.site.site_header = "Bookshop Management"
 admin.site.site_title = "Bookshop Admin"
@@ -224,3 +232,168 @@ class ProfileChangeRequestAdmin(admin.ModelAdmin):
             self._reject_profile_change(request, change)
             rejected += 1
         self.message_user(request, f"{rejected} profile change(s) rejected.", messages.WARNING)
+
+
+@admin.register(AccountCreationRequest)
+class AccountCreationRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        "username",
+        "first_name",
+        "last_name",
+        "email",
+        "phone_number",
+        "status",
+        "requested_at",
+    )
+    list_filter = ("status", "requested_at")
+    search_fields = ("username", "first_name", "last_name", "email", "phone_number")
+    readonly_fields = (
+        "first_name",
+        "middle_name",
+        "last_name",
+        "username",
+        "email",
+        "phone_number",
+        "status",
+        "requested_at",
+        "reviewed_at",
+        "reviewed_by",
+    )
+    exclude = ("password_hash",)
+    actions = ("approve_requests", "reject_requests")
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    @staticmethod
+    def _notify_applicant(account_request, subject, message):
+        send_mail(
+            subject,
+            message,
+            None,
+            [account_request.email],
+            fail_silently=False,
+        )
+
+    @transaction.atomic
+    def _approve_account_request(self, request, account_request):
+        account_request = AccountCreationRequest.objects.select_for_update().get(
+            pk=account_request.pk
+        )
+        if account_request.status != "PENDING":
+            return False
+        if User.objects.filter(username__iexact=account_request.username).exists():
+            return False
+
+        user = User.objects.create_user(
+            username=account_request.username,
+            first_name=account_request.first_name,
+            middle_name=account_request.middle_name,
+            last_name=account_request.last_name,
+            email=account_request.email,
+            phone_number=account_request.phone_number,
+            role="STAFF",
+            is_active=True,
+            password=None,
+        )
+        user.password = account_request.password_hash
+        user.save(update_fields=("password",))
+        ContactNumber.objects.create(
+            user=user,
+            number=account_request.phone_number,
+        )
+        account_request.status = "APPROVED"
+        account_request.reviewed_by = request.user
+        account_request.reviewed_at = timezone.now()
+        account_request.password_hash = ""
+        account_request.save(
+            update_fields=(
+                "status",
+                "reviewed_by",
+                "reviewed_at",
+                "password_hash",
+            )
+        )
+        ActivityLog.objects.create(
+            user=user,
+            recipient=user,
+            details=f"Your account request was approved by {request.user.username}.",
+        )
+        self._notify_applicant(
+            account_request,
+            "Your Ganesh Pustak Pasal account was approved",
+            (
+                f"Hello {account_request.first_name},\n\n"
+                "Your account request has been approved. "
+                f"You can now sign in with username '{account_request.username}'.\n\n"
+                "Ganesh Pustak Pasal"
+            ),
+        )
+        return True
+
+    @transaction.atomic
+    def _reject_account_request(self, request, account_request):
+        account_request = AccountCreationRequest.objects.select_for_update().get(
+            pk=account_request.pk
+        )
+        if account_request.status != "PENDING":
+            return False
+        account_request.status = "REJECTED"
+        account_request.reviewed_by = request.user
+        account_request.reviewed_at = timezone.now()
+        account_request.password_hash = ""
+        account_request.save(
+            update_fields=(
+                "status",
+                "reviewed_by",
+                "reviewed_at",
+                "password_hash",
+            )
+        )
+        self._notify_applicant(
+            account_request,
+            "Update on your Ganesh Pustak Pasal account request",
+            (
+                f"Hello {account_request.first_name},\n\n"
+                "Your account request was not approved by the administrator. "
+                "You cannot sign in with this request.\n\n"
+                "Ganesh Pustak Pasal"
+            ),
+        )
+        return True
+
+    @admin.action(description="Approve selected account requests")
+    def approve_requests(self, request, queryset):
+        approved = 0
+        conflicts = 0
+        for account_request in queryset.filter(status="PENDING"):
+            if self._approve_account_request(request, account_request):
+                approved += 1
+            else:
+                conflicts += 1
+        self.message_user(
+            request,
+            f"{approved} account request(s) approved.",
+            messages.SUCCESS,
+        )
+        if conflicts:
+            self.message_user(
+                request,
+                f"{conflicts} request(s) remain pending because the username is already in use.",
+                messages.ERROR,
+            )
+
+    @admin.action(description="Reject selected account requests")
+    def reject_requests(self, request, queryset):
+        rejected = 0
+        for account_request in queryset.filter(status="PENDING"):
+            if self._reject_account_request(request, account_request):
+                rejected += 1
+        self.message_user(
+            request,
+            f"{rejected} account request(s) rejected.",
+            messages.WARNING,
+        )

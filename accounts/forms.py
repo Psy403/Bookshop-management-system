@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, password_validation
 from django.core.validators import EmailValidator
 
 from .avatar_options import AVATAR_OPTIONS
-from .models import ProfileChangeRequest, User
+from .models import AccountCreationRequest, ProfileChangeRequest, User
 
 
 class StaffCreationForm(UserCreationForm):
@@ -36,6 +36,78 @@ class StaffCreationForm(UserCreationForm):
         if role != "STAFF":
             raise forms.ValidationError("New accounts created here must have the Staff role.")
         return role
+
+
+class AccountCreationRequestForm(forms.ModelForm):
+    password = forms.CharField(
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+    confirm_password = forms.CharField(
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+
+    class Meta:
+        model = AccountCreationRequest
+        fields = (
+            "first_name",
+            "middle_name",
+            "last_name",
+            "username",
+            "email",
+            "phone_number",
+        )
+
+    def clean_username(self):
+        username = self.cleaned_data["username"].strip()
+        if User.objects.filter(username__iexact=username).exists():
+            raise forms.ValidationError("This username is already in use.")
+        if AccountCreationRequest.objects.filter(
+            username__iexact=username,
+            status="PENDING",
+        ).exists():
+            raise forms.ValidationError("A request for this username is already pending.")
+        return username
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data["phone_number"].strip()
+        if (
+            len(phone_number) != 10
+            or not phone_number.isascii()
+            or not phone_number.isdigit()
+        ):
+            raise forms.ValidationError("Enter a valid 10-digit phone number.")
+        return phone_number
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip()
+        if not email.lower().endswith("@gmail.com"):
+            raise forms.ValidationError("Not valid email address.")
+        try:
+            EmailValidator()(email)
+        except forms.ValidationError as error:
+            raise forms.ValidationError("Not valid email address.") from error
+        return email
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+        if password and confirm_password and password != confirm_password:
+            self.add_error("confirm_password", "The passwords do not match.")
+        elif password:
+            candidate = User(
+                username=cleaned_data.get("username", ""),
+                first_name=cleaned_data.get("first_name", ""),
+                last_name=cleaned_data.get("last_name", ""),
+                email=cleaned_data.get("email", ""),
+            )
+            try:
+                password_validation.validate_password(password, candidate)
+            except forms.ValidationError as error:
+                self.add_error("password", error)
+        return cleaned_data
 
 
 class ProfileChangeRequestForm(forms.ModelForm):

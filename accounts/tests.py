@@ -7,13 +7,14 @@ from django.contrib import admin as django_admin
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.sessions.backends.db import SessionStore
+from django.core import mail
 from django.test import RequestFactory
 from django.urls import reverse
 from django.test import TestCase, override_settings
 from PIL import Image
 from sales.models import Sale
 from .forms import StaffCreationForm
-from .models import ContactEmail, ProfileChangeRequest
+from .models import AccountCreationRequest, ContactEmail, ProfileChangeRequest
 from log.models import ActivityLog
 
 
@@ -81,6 +82,242 @@ class StaffAuthenticationTests(TestCase):
             f'{reverse("staff_login")}?next={reverse("dashboard")}',
         )
 
+    def test_landing_page_stays_sign_in_when_a_session_is_already_authenticated(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("staff_login"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/staff_login.html")
+        self.assertContains(response, "Welcome back")
+
+    def test_login_page_shows_branded_staff_sign_in(self):
+        response = self.client.get(reverse("staff_login"))
+
+        self.assertContains(response, "Ganesh Pustak Pasal")
+        self.assertContains(response, "Smarter inventory,")
+        self.assertContains(response, "Inventory Management")
+        self.assertContains(response, "Fast &amp; Easy Billing")
+        self.assertContains(response, "Sales Overview &amp; Reports")
+        self.assertContains(response, 'name="username"')
+        self.assertContains(response, 'name="password"')
+        self.assertContains(response, reverse("signup"))
+        self.assertNotContains(response, "Your bookshop, in good hands")
+        self.assertNotContains(response, "Secure sign in")
+        self.assertNotContains(response, "Staff workspace")
+        self.assertNotContains(
+            response,
+            "Staff accounts are created by your administrator.",
+        )
+        self.assertNotContains(response, "Your session ends when you close this browser.")
+        self.assertNotContains(response, "Continue with Google")
+        self.assertContains(response, "New here?")
+        self.assertContains(response, "Create account")
+
+    def test_signup_page_displays_maintenance_message_and_returns_to_login(self):
+        response = self.client.get(reverse("signup"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/signup.html")
+        self.assertContains(response, "Less hassle")
+        self.assertContains(response, "Full name")
+        self.assertContains(response, "First name")
+        self.assertContains(response, "Middle name")
+        self.assertContains(response, "Last name")
+        self.assertContains(response, "Enter your username")
+        self.assertContains(response, "Step 1 / 4")
+        self.assertContains(response, "Progress saved automatically")
+
+    def test_signup_request_is_saved_with_a_hashed_password(self):
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "first_name": "New",
+                "middle_name": "Staff",
+                "last_name": "Member",
+                "username": "new-bookshop-staff",
+                "email": "new.staff@gmail.com",
+                "phone_number": "9800000000",
+                "password": "Harbor!Maple?River#7391",
+                "confirm_password": "Harbor!Maple?River#7391",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Account request submitted")
+        account_request = AccountCreationRequest.objects.get(
+            username="new-bookshop-staff"
+        )
+        self.assertEqual(account_request.status, "PENDING")
+        self.assertNotEqual(account_request.password_hash, "Harbor!Maple?River#7391")
+        self.assertTrue(
+            check_password("Harbor!Maple?River#7391", account_request.password_hash)
+        )
+        self.assertFalse(
+            get_user_model().objects.filter(username="new-bookshop-staff").exists()
+        )
+
+    def test_signup_request_rejects_duplicate_username_and_invalid_phone(self):
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "first_name": "New",
+                "middle_name": "",
+                "last_name": "Member",
+                "username": self.user.username.upper(),
+                "email": "new.staff@gmail.com",
+                "phone_number": "12345",
+                "password": "Harbor!Maple?River#7391",
+                "confirm_password": "Harbor!Maple?River#7391",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "This username is already in use.")
+        self.assertContains(response, "Enter a valid 10-digit phone number.")
+        self.assertEqual(AccountCreationRequest.objects.count(), 0)
+
+    def test_signup_validation_returns_to_the_step_with_invalid_fields(self):
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "first_name": "New",
+                "middle_name": "",
+                "last_name": "Member",
+                "username": "new-bookshop-staff",
+                "email": "not-an-email",
+                "phone_number": "9800000000",
+                "password": "Harbor!Maple?River#7391",
+                "confirm_password": "Harbor!Maple?River#7391",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["active_step"], 1)
+        self.assertContains(response, 'data-active-step="1"')
+        self.assertEqual(AccountCreationRequest.objects.count(), 0)
+
+    def test_signup_request_rejects_non_gmail_email(self):
+        response = self.client.post(
+            reverse("signup"),
+            {
+                "first_name": "New",
+                "middle_name": "",
+                "last_name": "Member",
+                "username": "new-bookshop-staff",
+                "email": "new.staff@example.com",
+                "phone_number": "9800000000",
+                "password": "Harbor!Maple?River#7391",
+                "confirm_password": "Harbor!Maple?River#7391",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Not valid email address.")
+        self.assertEqual(AccountCreationRequest.objects.count(), 0)
+
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    def test_admin_can_approve_account_request(self):
+        administrator = get_user_model().objects.create_superuser(
+            username="signup-admin",
+            email="signup-admin@example.com",
+            password="admin-password-123",
+        )
+        self.client.post(
+            reverse("signup"),
+            {
+                "first_name": "Approved",
+                "middle_name": "",
+                "last_name": "Staff",
+                "username": "approved-staff",
+                "email": "approved.staff@gmail.com",
+                "phone_number": "9811111111",
+                "password": "Harbor!Maple?River#7391",
+                "confirm_password": "Harbor!Maple?River#7391",
+            },
+        )
+        account_request = AccountCreationRequest.objects.get(username="approved-staff")
+        self.assertTrue(
+            ActivityLog.objects.filter(
+                recipient=administrator,
+                details__contains="New account request from Approved Staff.",
+            ).exists()
+        )
+        self.client.force_login(administrator)
+        dashboard_response = self.client.get("/admin/")
+        self.assertEqual(
+            dashboard_response.context["admin_dashboard_stats"]["pending_requests"],
+            1,
+        )
+
+        response = self.client.post(
+            reverse("admin:accounts_accountcreationrequest_changelist"),
+            {
+                "action": "approve_requests",
+                "_selected_action": [account_request.pk],
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        created_user = get_user_model().objects.get(username="approved-staff")
+        self.assertTrue(created_user.is_active)
+        self.assertFalse(created_user.is_staff)
+        self.assertTrue(created_user.check_password("Harbor!Maple?River#7391"))
+        account_request.refresh_from_db()
+        self.assertEqual(account_request.status, "APPROVED")
+        self.assertEqual(account_request.password_hash, "")
+        self.assertTrue(
+            ActivityLog.objects.filter(
+                recipient=created_user,
+                details__contains="account request was approved",
+            ).exists()
+        )
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["approved.staff@gmail.com"])
+        self.assertIn("approved", mail.outbox[0].subject.lower())
+
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    def test_admin_can_reject_account_request_and_clear_password_hash(self):
+        administrator = get_user_model().objects.create_superuser(
+            username="signup-reject-admin",
+            email="signup-reject-admin@example.com",
+            password="admin-password-123",
+        )
+        self.client.post(
+            reverse("signup"),
+            {
+                "first_name": "Rejected",
+                "middle_name": "",
+                "last_name": "Staff",
+                "username": "rejected-staff",
+                "email": "rejected.staff@gmail.com",
+                "phone_number": "9811111111",
+                "password": "Harbor!Maple?River#7391",
+                "confirm_password": "Harbor!Maple?River#7391",
+            },
+        )
+        account_request = AccountCreationRequest.objects.get(username="rejected-staff")
+        self.client.force_login(administrator)
+
+        response = self.client.post(
+            reverse("admin:accounts_accountcreationrequest_changelist"),
+            {
+                "action": "reject_requests",
+                "_selected_action": [account_request.pk],
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        account_request.refresh_from_db()
+        self.assertEqual(account_request.status, "REJECTED")
+        self.assertEqual(account_request.password_hash, "")
+        self.assertFalse(
+            get_user_model().objects.filter(username="rejected-staff").exists()
+        )
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["rejected.staff@gmail.com"])
+        self.assertIn("update", mail.outbox[0].subject.lower())
+
     def test_successful_login_creates_browser_session(self):
         response = self.client.post(
             reverse("staff_login"),
@@ -93,6 +330,8 @@ class StaffAuthenticationTests(TestCase):
         self.assertRedirects(response, reverse("dashboard"))
         self.assertIn("_auth_user_id", self.client.session)
         self.assertTrue(self.client.session.get_expire_at_browser_close())
+        login_activity = ActivityLog.objects.get(details=f'User "{self.user.username}" logged in.')
+        self.assertEqual(login_activity.recipient, self.user)
 
     def test_staff_logout_requires_post_and_ends_session(self):
         self.client.force_login(self.user)
@@ -105,6 +344,10 @@ class StaffAuthenticationTests(TestCase):
 
         self.assertRedirects(post_response, reverse("staff_login"))
         self.assertNotIn("_auth_user_id", self.client.session)
+        logout_activity = ActivityLog.objects.get(
+            details=f'User "{self.user.username}" logged out.'
+        )
+        self.assertEqual(logout_activity.recipient, self.user)
 
     def test_tab_close_endpoint_requires_post_and_ends_session(self):
         self.client.force_login(self.user)
@@ -117,6 +360,10 @@ class StaffAuthenticationTests(TestCase):
 
         self.assertEqual(post_response.status_code, 204)
         self.assertNotIn("_auth_user_id", self.client.session)
+        logout_activity = ActivityLog.objects.get(
+            details=f'User "{self.user.username}" logged out when their tab closed.'
+        )
+        self.assertEqual(logout_activity.recipient, self.user)
 
     def test_staff_creation_rejects_duplicate_username(self):
         form = StaffCreationForm(

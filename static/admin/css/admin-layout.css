@@ -1424,6 +1424,20 @@ html[data-theme="dark"] .dashboard-panel {
     box-shadow: var(--tw-shadow);
 }
 
+.dashboard-kpi-link {
+    color: inherit !important;
+    text-decoration: none !important;
+    transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.dashboard-kpi-link:hover,
+.dashboard-kpi-link:focus-visible {
+    border-color: var(--admin-primary);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.14);
+    color: inherit !important;
+    transform: translateY(-1px);
+}
+
 html[data-theme="dark"] .dashboard-kpi span,
 html[data-theme="dark"] .dashboard-subtitle,
 html[data-theme="dark"] .dashboard-kpi small,
